@@ -1,10 +1,8 @@
-name: Astro Deploy
+name: Deploy
 
 on:
   push:
-    branches: [main]
-  pull_request:
-  merge_group:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -13,32 +11,30 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           submodules: true
 
-      - uses: voidzero-dev/setup-vp@v1
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '24'
-          cache: true
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: vp install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Astro site
-        run: vp run build
+      - name: Build
+        run: pnpm run build
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist
-          external_repository: SigureMo/SigureMo.github.io
-          publish_branch: main
-          cname: nyakku.moe
+          cname: xnnehang.top
           force_orphan: true
-          commit_message: ':rocket: deploy: '
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
