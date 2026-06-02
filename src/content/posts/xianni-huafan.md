@@ -1,5 +1,5 @@
 ---
-title: 关于仙逆的化凡与凡人修仙传的隐居
+title: 关于仙逆与凡人修仙传中的化凡
 published: 2025-02-18
 category: 随笔
 tags:
