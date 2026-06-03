@@ -78,6 +78,11 @@ export type Category = {
   url: string
 }
 
+export type Series = {
+  name: string
+  posts: PostForList[]
+}
+
 export async function getCategoryList(): Promise<Category[]> {
   const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
     return import.meta.env.PROD ? data.draft !== true : true
@@ -111,4 +116,40 @@ export async function getCategoryList(): Promise<Category[]> {
     })
   }
   return ret
+}
+
+export async function getSeriesList(): Promise<Series[]> {
+  const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true
+  })
+
+  const seriesMap: Map<string, PostForList[]> = new Map()
+  allBlogPosts.forEach((post) => {
+    const names = post.data.series || []
+    names.forEach((name) => {
+      if (!seriesMap.has(name)) seriesMap.set(name, [])
+      seriesMap.get(name)!.push({
+        slug: post.id,
+        data: post.data,
+      })
+    })
+  })
+
+  // Sort posts within each series by published date (ascending)
+  for (const [, posts] of seriesMap) {
+    posts.sort((a, b) => {
+      return new Date(a.data.published).getTime() - new Date(b.data.published).getTime()
+    })
+  }
+
+  // Sort series by their newest post date
+  const sorted = Array.from(seriesMap.entries())
+    .map(([name, posts]) => ({ name, posts }))
+    .sort((a, b) => {
+      const aDate = new Date(a.posts[a.posts.length - 1]?.data.published ?? 0).getTime()
+      const bDate = new Date(b.posts[b.posts.length - 1]?.data.published ?? 0).getTime()
+      return bDate - aDate
+    })
+
+  return sorted
 }

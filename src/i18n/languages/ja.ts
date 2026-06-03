@@ -36,4 +36,13 @@ export const ja: Translation = {
   [Key.author]: '作者',
   [Key.publishedAt]: '公開日',
   [Key.license]: 'ライセンス',
+
+  [Key.series]: 'シリーズ',
+  [Key.seriesIndex]: 'シリーズ一覧',
+  [Key.relatedPosts]: '関連記事',
+
+  [Key.seriesPostCount]: '{0} 件',
+  [Key.seriesCollapsedPrev]: '上 {0} 件を折りたたみ',
+  [Key.seriesCollapsedNext]: '下 {0} 件を折りたたみ',
+  [Key.seriesCurrentLabel]: '現在',
 }

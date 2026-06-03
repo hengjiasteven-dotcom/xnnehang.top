@@ -1,0 +1,55 @@
+---
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import MainGridLayout from '@layouts/MainGridLayout.astro'
+import { getSeriesList } from '@utils/content-utils'
+import { getSeriesUrl, getPostUrlBySlug } from '@utils/url-utils'
+import PostCard from '@components/PostCard.astro'
+
+const seriesList = await getSeriesList()
+---
+
+<MainGridLayout title={i18n(I18nKey.seriesIndex)}>
+  <div class="flex flex-col gap-6">
+    {
+      seriesList.map((s) => (
+        <section class="card-base rounded-[var(--radius-large)] p-6">
+          <a
+            href={getSeriesUrl(s.name)}
+            class="mb-4 block text-xl font-bold text-[var(--primary)] transition hover:opacity-80"
+          >
+            {s.name}
+            <span class="ml-2 text-sm font-normal text-neutral-500">
+              {i18n(I18nKey.seriesPostCount).replace('{0}', String(s.posts.length))}
+            </span>
+          </a>
+          <div class="flex flex-col gap-3 md:gap-2">
+            {
+              s.posts.slice(0, 5).map((entry) => (
+                <a
+                  href={getPostUrlBySlug(entry.slug)}
+                  class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition hover:bg-black/5 dark:hover:bg-white/5"
+                >
+                  <span class="truncate font-medium">{entry.data.title}</span>
+                  <span class="shrink-0 text-xs text-neutral-400">
+                    {entry.data.published.toISOString().slice(0, 10)}
+                  </span>
+                </a>
+              ))
+            }
+            {
+              s.posts.length > 5 && (
+                <a
+                  href={getSeriesUrl(s.name)}
+                  class="text-center text-xs text-neutral-400 transition hover:text-[var(--primary)]"
+                >
+                  {i18n(I18nKey.seriesCollapsedNext).replace('{0}', String(s.posts.length - 5))}
+                </a>
+              )
+            }
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</MainGridLayout>

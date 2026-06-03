@@ -36,4 +36,13 @@ export const es: Translation = {
   [Key.author]: 'Autor',
   [Key.publishedAt]: 'Publicado el',
   [Key.license]: 'Licencia',
+
+  [Key.series]: 'Series',
+  [Key.seriesIndex]: 'Índice de Series',
+  [Key.relatedPosts]: 'Artículos Relacionados',
+
+  [Key.seriesPostCount]: '{0} posts',
+  [Key.seriesCollapsedPrev]: '{0} colapsados arriba',
+  [Key.seriesCollapsedNext]: '{0} colapsados abajo',
+  [Key.seriesCurrentLabel]: 'actual',
 }

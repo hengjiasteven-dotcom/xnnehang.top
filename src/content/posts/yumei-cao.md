@@ -7,6 +7,8 @@ tags:
   - 夏目漱石
   - 虞美人草
 description: 夏目漱石《虞美人草》阅读笔记，关于注意力、戏剧与人性的率真
+series:
+  - 阅读
 ---
 
 ![虞美人草](../../assets/img/yume-caohou/202407172303464.jpeg)

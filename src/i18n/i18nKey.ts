@@ -33,6 +33,15 @@ enum I18nKey {
   author = 'author',
   publishedAt = 'publishedAt',
   license = 'license',
+
+  series = 'series',
+  seriesIndex = 'seriesIndex',
+  relatedPosts = 'relatedPosts',
+
+  seriesPostCount = 'seriesPostCount',
+  seriesCollapsedPrev = 'seriesCollapsedPrev',
+  seriesCollapsedNext = 'seriesCollapsedNext',
+  seriesCurrentLabel = 'seriesCurrentLabel',
 }
 
 export default I18nKey

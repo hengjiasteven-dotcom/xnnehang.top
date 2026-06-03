@@ -7,6 +7,8 @@ tags:
   - 吸血鬼的旋律
   - 游戏
 description: 吸血鬼的旋律通关感想，极致的浪漫主义
+series:
+  - 观影
 ---
 
 ## Vampires'Melody 吸血鬼的旋律后

@@ -7,6 +7,8 @@ tags:
   - 青春同人志
   - 影评
 description: 青春同人志观影记录，关于中性美、缺陷与共鸣
+series:
+  - 观影
 ---
 
 ![青春同人志](../../assets/img/qingchun-tongrenzhi/202407080814636.jpeg)

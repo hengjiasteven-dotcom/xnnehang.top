@@ -6,7 +6,8 @@ import I18nKey from '@i18n/i18nKey'
 import { i18n } from '@i18n/translation'
 import MainGridLayout from '@layouts/MainGridLayout.astro'
 import { getSortedPosts } from '@utils/content-utils'
-import { getDir, getPostUrlBySlug } from '@utils/url-utils'
+import { buildTfidfIndex, getRelatedByTfidf } from '@utils/tfidf'
+import { getDir, getPostUrlBySlug, getSeriesUrl } from '@utils/url-utils'
 import { Icon } from 'astro-icon/components'
 import { licenseConfig } from 'src/config'
 import ImageWrapper from '../../components/misc/ImageWrapper.astro'
@@ -17,13 +18,23 @@ import { render } from 'astro:content'
 
 export async function getStaticPaths() {
   const blogEntries = await getSortedPosts()
-  return blogEntries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
+  const tfidfIndex = await buildTfidfIndex()
+
+  const allPosts = blogEntries.map((post) => ({
+    slug: post.id,
+    data: post.data,
   }))
+
+  return blogEntries.map((entry) => {
+    const relatedPosts = getRelatedByTfidf(entry.id, tfidfIndex, 5)
+    return {
+      params: { slug: entry.id },
+      props: { entry, allPosts, relatedPosts },
+    }
+  })
 }
 
-const { entry } = Astro.props
+const { entry, allPosts, relatedPosts } = Astro.props
 const { Content, headings, remarkPluginFrontmatter } = await render(entry)
 
 const jsonLd = {
@@ -145,6 +156,130 @@ const jsonLd = {
             pubDate={entry.data.published}
             class="license-container onload-animation mb-6 rounded-xl"
           />
+        )
+      }
+
+      <!-- series navigation -->
+      {
+        entry.data.series && entry.data.series.length > 0 && (() => {
+          const AROUND_WINDOW = 5
+          const seriesNames = entry.data.series || []
+          return seriesNames.map((seriesName: string) => {
+            const seriesPosts = allPosts
+              .filter((p: { data: { series: string[] } }) =>
+                p.data.series && p.data.series.includes(seriesName),
+              )
+              .sort((a: { data: { published: Date } }, b: { data: { published: Date } }) => {
+                return new Date(a.data.published).getTime() - new Date(b.data.published).getTime()
+              })
+            const total = seriesPosts.length
+            const currentIndex = seriesPosts.findIndex(
+              (p: { slug: string }) => p.slug === entry.id,
+            )
+            const prevInSeries = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null
+            const nextInSeries = currentIndex < total - 1 ? seriesPosts[currentIndex + 1] : null
+
+            // Truncate to show posts around the current one
+            const start = Math.max(0, currentIndex - AROUND_WINDOW)
+            const end = Math.min(total, currentIndex + AROUND_WINDOW + 1)
+            const visiblePosts = seriesPosts.slice(start, end)
+            const isTruncated = total > AROUND_WINDOW * 2 + 1
+
+            return (
+              <div class="series-nav onload-animation card-base mb-4 rounded-2xl p-5">
+                <div class="flex items-center justify-between">
+                  <a
+                    href={getSeriesUrl(seriesName)}
+                    class="text-sm font-bold uppercase tracking-wider text-[var(--primary)] transition hover:opacity-80"
+                  >
+                    {seriesName}
+                  </a>
+                  <span class="text-50 text-xs">{i18n(I18nKey.seriesPostCount).replace('{0}', String(total))}</span>
+                </div>
+                <ol class="mt-3 flex flex-col gap-1.5">
+                  {start > 0 && (
+                    <li class="text-center text-xs text-neutral-400">
+                      <a href={getSeriesUrl(seriesName)} class="hover:text-[var(--primary)]">{i18n(I18nKey.seriesCollapsedPrev).replace('{0}', String(start))}</a>
+                    </li>
+                  )}
+                  {visiblePosts.map((p: { slug: string; data: { title: string } }, i: number) => {
+                    const isCurrent = p.slug === entry.id
+                    const realIndex = start + i
+                    return (
+                      <li class:list={[{ 'text-[var(--primary)]': isCurrent }, 'transition']}>
+                        <a
+                          href={isCurrent ? undefined : getPostUrlBySlug(p.slug)}
+                          class:list={[
+                            'flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition',
+                            isCurrent
+                              ? 'bg-[var(--primary)]/10 font-medium'
+                              : 'hover:bg-black/5 dark:hover:bg-white/5',
+                          ]}
+                        >
+                          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-black/5 text-xs dark:bg-white/10">
+                            {realIndex + 1}
+                          </span>
+                          <span class="truncate">{p.data.title}</span>
+                          {isCurrent && <span class="ml-auto text-xs opacity-60">· {i18n(I18nKey.seriesCurrentLabel)}</span>}
+                        </a>
+                      </li>
+                    )
+                  })}
+                  {end < total && (
+                    <li class="text-center text-xs text-neutral-400">
+                      <a href={getSeriesUrl(seriesName)} class="hover:text-[var(--primary)]">{i18n(I18nKey.seriesCollapsedNext).replace('{0}', String(total - end))}</a>
+                    </li>
+                  )}
+                </ol>
+
+                <!-- series prev/next -->
+                <div class="mt-3 flex gap-3 border-t border-dashed border-black/10 pt-3 dark:border-white/10">
+                  {prevInSeries ? (
+                    <a
+                      href={getPostUrlBySlug(prevInSeries.slug)}
+                      class="btn-card flex flex-1 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium active:scale-95"
+                    >
+                      <Icon name="material-symbols:chevron-left-rounded" class="text-xl text-[var(--primary)]" />
+                      <span class="truncate">{prevInSeries.data.title}</span>
+                    </a>
+                  ) : (
+                    <div class="flex-1" />
+                  )}
+                  {nextInSeries ? (
+                    <a
+                      href={getPostUrlBySlug(nextInSeries.slug)}
+                      class="btn-card flex flex-1 items-center justify-end gap-2 rounded-xl px-3 py-2 text-sm font-medium active:scale-95"
+                    >
+                      <span class="truncate">{nextInSeries.data.title}</span>
+                      <Icon name="material-symbols:chevron-right-rounded" class="text-xl text-[var(--primary)]" />
+                    </a>
+                  ) : (
+                    <div class="flex-1" />
+                  )}
+                </div>
+              </div>
+            )
+          })
+        })()
+      }
+
+      <!-- related posts -->
+      {
+        relatedPosts.length > 0 && (
+          <section class="related-posts onload-animation mb-4">
+            <h2 class="mb-3 text-lg font-bold">{i18n(I18nKey.relatedPosts)}</h2>
+            <div class="grid gap-3 md:grid-cols-2">
+              {relatedPosts.map((p: { slug: string; data: { title: string; published: Date } }) => (
+                <a
+                  href={getPostUrlBySlug(p.slug)}
+                  class="card-base flex flex-col gap-1 rounded-xl p-4 transition hover:bg-black/5 active:scale-[0.98] dark:hover:bg-white/5"
+                >
+                  <span class="font-medium leading-snug">{p.data.title}</span>
+                  <span class="text-50 text-xs">{formatDateToYYYYMMDD(p.data.published)}</span>
+                </a>
+              ))}
+            </div>
+          </section>
         )
       }
     </div>

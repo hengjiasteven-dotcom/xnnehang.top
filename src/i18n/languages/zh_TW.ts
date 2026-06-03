@@ -36,4 +36,13 @@ export const zh_TW: Translation = {
   [Key.author]: '作者',
   [Key.publishedAt]: '發佈於',
   [Key.license]: '許可協議',
+
+  [Key.series]: '系列',
+  [Key.seriesIndex]: '系列目錄',
+  [Key.relatedPosts]: '相關文章',
+
+  [Key.seriesPostCount]: '{0} 篇',
+  [Key.seriesCollapsedPrev]: '前 {0} 篇已摺疊',
+  [Key.seriesCollapsedNext]: '後 {0} 篇已摺疊',
+  [Key.seriesCurrentLabel]: '當前',
 }
