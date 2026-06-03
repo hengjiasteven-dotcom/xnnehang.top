@@ -11,6 +11,8 @@ series:
   - 阅读
   - 哲学思考
 ---
+![潘多拉的盒子](../../assets/img/covers/panduola.jpg)
+
 
 > 我昨晚咯血了，前一天晚上也咯血了。
 >

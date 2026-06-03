@@ -272,16 +272,26 @@ const jsonLd = {
         relatedPosts.length > 0 && (
           <section class="related-posts onload-animation mb-4">
             <h2 class="mb-3 text-lg font-bold">{i18n(I18nKey.relatedPosts)}</h2>
-            <div class="grid gap-3 md:grid-cols-2">
-              {relatedPosts.map((p: { slug: string; data: { title: string; published: Date } }) => (
-                <a
-                  href={getPostUrlBySlug(p.slug)}
-                  class="card-base flex flex-col gap-1 rounded-xl p-4 transition hover:bg-black/5 active:scale-[0.98] dark:hover:bg-white/5"
-                >
-                  <span class="font-medium leading-snug">{p.data.title}</span>
-                  <span class="text-50 text-xs">{formatDateToYYYYMMDD(p.data.published)}</span>
-                </a>
-              ))}
+            <div class="flex flex-col gap-3">
+              {relatedPosts.map((p: { slug: string; data: { title: string; published: Date; image?: string } }) => {
+                const img = p.data.image || ''
+                return (
+                  <a
+                    href={getPostUrlBySlug(p.slug)}
+                    class="card-base flex items-center gap-4 rounded-xl p-4 transition hover:bg-black/5 active:scale-[0.98] dark:hover:bg-white/5"
+                  >
+                    {img && (
+                      <div class="h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-black/5 dark:bg-white/5">
+                        <img src={img} alt="" class="h-full w-full object-cover" loading="lazy" />
+                      </div>
+                    )}
+                    <div class="flex min-w-0 flex-col gap-0.5">
+                      <span class="truncate font-medium leading-snug">{p.data.title}</span>
+                      <span class="text-50 shrink-0 text-xs">{formatDateToYYYYMMDD(p.data.published)}</span>
+                    </div>
+                  </a>
+                )
+              })}
             </div>
           </section>
         )

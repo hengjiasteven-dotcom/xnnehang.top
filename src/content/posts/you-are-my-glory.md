@@ -9,6 +9,8 @@ description: 关于《你是我的荣耀》的一封信
 series:
   - 观影
 ---
+![你是我的荣耀](../../assets/img/covers/you-are-my-glory.jpg)
+
 
 > 原来你只从我身边借过，
 > 而我却误以为你是从天而降的彩虹~

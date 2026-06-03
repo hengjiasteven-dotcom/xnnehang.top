@@ -10,6 +10,8 @@ description: 寒假结束时的胡思乱想，关于死亡、期限与改变
 series:
   - 阅读
 ---
+![没有明天的我们，在昨天相恋](../../assets/img/covers/meiyou-mingtian.jpg)
+
 
 >>第一天写 - 大部分被我删掉了,所以会有点怪异。
 
