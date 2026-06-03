@@ -45,4 +45,6 @@ export const tr: Translation = {
   [Key.seriesCollapsedPrev]: 'üstte {0} daraltıldı',
   [Key.seriesCollapsedNext]: 'altta {0} daraltıldı',
   [Key.seriesCurrentLabel]: 'mevcut',
+
+  [Key.backlinks]: 'Buradan referans verilen',
 }

@@ -45,4 +45,6 @@ export const th: Translation = {
   [Key.seriesCollapsedPrev]: '{0} รายการถูกซ่อนด้านบน',
   [Key.seriesCollapsedNext]: '{0} รายการถูกซ่อนด้านล่าง',
   [Key.seriesCurrentLabel]: 'ปัจจุบัน',
+
+  [Key.backlinks]: 'อ้างอิงจาก',
 }

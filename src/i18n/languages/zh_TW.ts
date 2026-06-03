@@ -45,4 +45,6 @@ export const zh_TW: Translation = {
   [Key.seriesCollapsedPrev]: '前 {0} 篇已摺疊',
   [Key.seriesCollapsedNext]: '後 {0} 篇已摺疊',
   [Key.seriesCurrentLabel]: '當前',
+
+  [Key.backlinks]: '引用了本文',
 }

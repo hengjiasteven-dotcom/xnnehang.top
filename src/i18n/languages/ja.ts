@@ -45,4 +45,6 @@ export const ja: Translation = {
   [Key.seriesCollapsedPrev]: '上 {0} 件を折りたたみ',
   [Key.seriesCollapsedNext]: '下 {0} 件を折りたたみ',
   [Key.seriesCurrentLabel]: '現在',
+
+  [Key.backlinks]: 'この記事を参照',
 }

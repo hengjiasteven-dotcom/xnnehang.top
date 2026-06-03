@@ -45,4 +45,6 @@ export const en: Translation = {
   [Key.seriesCollapsedPrev]: '{0} collapsed above',
   [Key.seriesCollapsedNext]: '{0} collapsed below',
   [Key.seriesCurrentLabel]: 'current',
+
+  [Key.backlinks]: 'Referenced from',
 }

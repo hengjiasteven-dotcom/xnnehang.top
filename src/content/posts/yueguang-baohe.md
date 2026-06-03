@@ -161,7 +161,7 @@ series:
 
 ![lsp截图13](../../assets/img/yueguang-baohe/202408291316324.jpeg)
 
-> 原本紫霞该放在下一部的，但结尾就截了好多啊。初见就是心动,lsp实锤。
+> 原本紫霞该放在[[大圣娶亲后]]，但结尾就截了好多啊。初见就是心动,lsp实锤。
 
 ![lsp截图14](../../assets/img/yueguang-baohe/202408291326129.jpeg)
 

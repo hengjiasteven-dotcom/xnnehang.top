@@ -45,4 +45,6 @@ export const ko: Translation = {
   [Key.seriesCollapsedPrev]: '위 {0}개 접힘',
   [Key.seriesCollapsedNext]: '아래 {0}개 접힘',
   [Key.seriesCurrentLabel]: '현재',
+
+  [Key.backlinks]: '참조한 글',
 }

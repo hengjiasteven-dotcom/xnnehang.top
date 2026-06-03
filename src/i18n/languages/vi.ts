@@ -45,4 +45,6 @@ export const vi: Translation = {
   [Key.seriesCollapsedPrev]: '{0} bài đã thu gọn phía trên',
   [Key.seriesCollapsedNext]: '{0} bài đã thu gọn phía dưới',
   [Key.seriesCurrentLabel]: 'hiện tại',
+
+  [Key.backlinks]: 'Được tham chiếu từ',
 }

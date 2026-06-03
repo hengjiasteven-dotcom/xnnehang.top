@@ -42,6 +42,8 @@ enum I18nKey {
   seriesCollapsedPrev = 'seriesCollapsedPrev',
   seriesCollapsedNext = 'seriesCollapsedNext',
   seriesCurrentLabel = 'seriesCurrentLabel',
+
+  backlinks = 'backlinks',
 }
 
 export default I18nKey

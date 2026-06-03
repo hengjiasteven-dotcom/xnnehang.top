@@ -7,6 +7,7 @@ import { i18n } from '@i18n/translation'
 import MainGridLayout from '@layouts/MainGridLayout.astro'
 import { getSortedPosts } from '@utils/content-utils'
 import { buildTfidfIndex, getRelatedByTfidf } from '@utils/tfidf'
+import { buildWikiGraph } from '@utils/wikilinks'
 import { getDir, getPostUrlBySlug, getSeriesUrl } from '@utils/url-utils'
 import { Icon } from 'astro-icon/components'
 import { licenseConfig } from 'src/config'
@@ -19,6 +20,7 @@ import { render } from 'astro:content'
 export async function getStaticPaths() {
   const blogEntries = await getSortedPosts()
   const tfidfIndex = await buildTfidfIndex()
+  const wikiGraph = await buildWikiGraph()
 
   const allPosts = blogEntries.map((post) => ({
     slug: post.id,
@@ -27,14 +29,16 @@ export async function getStaticPaths() {
 
   return blogEntries.map((entry) => {
     const relatedPosts = getRelatedByTfidf(entry.id, tfidfIndex, 5)
+    const wikiNode = wikiGraph.get(entry.id)
+    const inboundLinks = wikiNode?.inbound || []
     return {
       params: { slug: entry.id },
-      props: { entry, allPosts, relatedPosts },
+      props: { entry, allPosts, relatedPosts, inboundLinks },
     }
   })
 }
 
-const { entry, allPosts, relatedPosts } = Astro.props
+const { entry, allPosts, relatedPosts, inboundLinks } = Astro.props
 const { Content, headings, remarkPluginFrontmatter } = await render(entry)
 
 const jsonLd = {
@@ -276,6 +280,26 @@ const jsonLd = {
                 >
                   <span class="font-medium leading-snug">{p.data.title}</span>
                   <span class="text-50 text-xs">{formatDateToYYYYMMDD(p.data.published)}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- backlinks -->
+      {
+        inboundLinks.length > 0 && (
+          <section class="backlinks onload-animation mb-4">
+            <h2 class="mb-3 text-lg font-bold">{i18n(I18nKey.backlinks)}</h2>
+            <div class="flex flex-col gap-2">
+              {inboundLinks.map((link: { slug: string; title: string }) => (
+                <a
+                  href={getPostUrlBySlug(link.slug)}
+                  class="card-base flex items-center gap-2 rounded-xl px-4 py-3 text-sm transition hover:bg-black/5 active:scale-[0.98] dark:hover:bg-white/5"
+                >
+                  <Icon name="material-symbols:subdirectory-arrow-left-rounded" class="text-lg text-[var(--primary)]" />
+                  <span class="font-medium">{link.title}</span>
                 </a>
               ))}
             </div>

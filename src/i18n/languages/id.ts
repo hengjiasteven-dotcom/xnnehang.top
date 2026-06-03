@@ -45,4 +45,6 @@ export const id: Translation = {
   [Key.seriesCollapsedPrev]: '{0} dilipat di atas',
   [Key.seriesCollapsedNext]: '{0} dilipat di bawah',
   [Key.seriesCurrentLabel]: 'saat ini',
+
+  [Key.backlinks]: 'Dirujuk dari',
 }
