@@ -190,3 +190,7 @@
     }
   }
 }
+
+.custom-md hr {
+  @apply my-6 border-t-2 border-dashed border-black/50 dark:border-white/50;
+}

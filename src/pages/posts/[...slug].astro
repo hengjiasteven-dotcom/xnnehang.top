@@ -16,6 +16,10 @@ import PostMetadata from '../../components/PostMeta.astro'
 import { profileConfig, siteConfig } from '../../config'
 import { formatDateToYYYYMMDD } from '../../utils/date-utils'
 import { render } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+
+// Enriched related post with cover image
+type RelatedPost = { slug: string; data: CollectionEntry<'posts'>['data']; firstImage: string }
 
 export async function getStaticPaths() {
   const blogEntries = await getSortedPosts()
@@ -27,15 +31,24 @@ export async function getStaticPaths() {
     data: post.data,
   }))
 
-  return blogEntries.map((entry) => {
+  return Promise.all(blogEntries.map(async (entry) => {
     const relatedPosts = getRelatedByTfidf(entry.id, tfidfIndex, 5)
     const wikiNode = wikiGraph.get(entry.id)
     const inboundLinks = wikiNode?.inbound || []
+
+    // Enrich related posts with firstImage from rendered body
+    const relatedWithImg = await Promise.all(relatedPosts.map(async (rp) => {
+      const full = blogEntries.find((e) => e.id === rp.slug)
+      if (!full) return { ...rp, firstImage: '' }
+      const { remarkPluginFrontmatter } = await render(full)
+      return { ...rp, firstImage: remarkPluginFrontmatter.firstImage || '' }
+    }))
+
     return {
       params: { slug: entry.id },
-      props: { entry, allPosts, relatedPosts, inboundLinks },
+      props: { entry, allPosts, relatedPosts: relatedWithImg, inboundLinks },
     }
-  })
+  }))
 }
 
 const { entry, allPosts, relatedPosts, inboundLinks } = Astro.props
@@ -273,8 +286,8 @@ const jsonLd = {
           <section class="related-posts onload-animation mb-4">
             <h2 class="mb-3 text-lg font-bold">{i18n(I18nKey.relatedPosts)}</h2>
             <div class="flex flex-col gap-3">
-              {relatedPosts.map((p: { slug: string; data: { title: string; published: Date; image?: string } }) => {
-                const img = p.data.image || ''
+              {relatedPosts.map((p: RelatedPost) => {
+                const img = p.firstImage || p.data.image || ''
                 return (
                   <a
                     href={getPostUrlBySlug(p.slug)}
@@ -282,7 +295,12 @@ const jsonLd = {
                   >
                     {img && (
                       <div class="h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-black/5 dark:bg-white/5">
-                        <img src={img} alt="" class="h-full w-full object-cover" loading="lazy" />
+                        <ImageWrapper
+                          src={img}
+                          basePath={path.join('content/posts/', getDir(p.slug))}
+                          alt=""
+                          class="h-full w-full"
+                        />
                       </div>
                     )}
                     <div class="flex min-w-0 flex-col gap-0.5">
