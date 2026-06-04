@@ -80,7 +80,7 @@ export type Category = {
 
 export type Series = {
   name: string
-  posts: PostForList[]
+  posts: CollectionEntry<'posts'>[]
 }
 
 export async function getCategoryList(): Promise<Category[]> {
@@ -128,10 +128,7 @@ export async function getSeriesList(): Promise<Series[]> {
     const names = post.data.series || []
     names.forEach((name) => {
       if (!seriesMap.has(name)) seriesMap.set(name, [])
-      seriesMap.get(name)!.push({
-        slug: post.id,
-        data: post.data,
-      })
+      seriesMap.get(name)!.push(post)
     })
   })
 
