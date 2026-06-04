@@ -1,7 +1,7 @@
 ---
 title: Vampires' Melody 吸血鬼的旋律 后
 published: 2024-09-01
-category: 随笔
+category: 观后
 tags:
   - galgame
   - 吸血鬼的旋律

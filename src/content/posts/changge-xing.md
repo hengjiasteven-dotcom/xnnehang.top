@@ -1,7 +1,7 @@
 ---
 title: 长歌行：送君千里，终须一别
 published: 2025-02-16
-category: 随笔
+category: 观后
 tags:
   - 动漫
   - 影评

@@ -1,7 +1,7 @@
 ---
 title: 《汤岛之恋》
 published: 2024-07-15
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 汤岛之恋

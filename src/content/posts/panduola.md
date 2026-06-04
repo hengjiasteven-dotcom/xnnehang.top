@@ -1,7 +1,7 @@
 ---
 title: 潘多拉的盒子
 published: 2024-08-04
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 潘多拉的盒子

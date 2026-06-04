@@ -1,7 +1,7 @@
 ---
 title: 《当我谈论跑步时，谈些什么》阅读手记
 published: 2024-10-15
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 村上春树

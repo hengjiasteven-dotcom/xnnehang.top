@@ -1,7 +1,7 @@
 ---
 title: 春娇与志明
 published: 2024-07-08
-category: 随笔
+category: 观后
 tags:
   - 电影
   - 春娇与志明

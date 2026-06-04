@@ -1,7 +1,7 @@
 ---
 title: 存在主义阅读手记
 published: 2024-06-20
-category: 随笔
+category: 胡思乱想
 tags:
   - 读书
   - 存在主义

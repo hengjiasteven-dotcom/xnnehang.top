@@ -1,7 +1,7 @@
 ---
 title: 《食神》后
 published: 2024-08-13
-category: 随笔
+category: 观后
 tags:
   - 电影
   - 周星驰

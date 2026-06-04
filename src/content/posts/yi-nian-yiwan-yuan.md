@@ -1,7 +1,7 @@
 ---
 title: 《以一年一萬元的價格》后
 published: 2024-07-08
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 轻小说

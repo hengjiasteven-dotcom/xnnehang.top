@@ -1,7 +1,7 @@
 ---
 title: 我一个人来，一个人走
 published: 2024-08-17
-category: 随笔
+category: 观后
 tags:
   - 日常
   - 电影

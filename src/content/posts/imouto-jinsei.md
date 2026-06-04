@@ -1,7 +1,7 @@
 ---
 title: 妹妹人生
 published: 2024-10-18
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 轻小说

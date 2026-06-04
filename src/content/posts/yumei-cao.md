@@ -1,7 +1,7 @@
 ---
 title: 虞美人草后
 published: 2024-07-17
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 夏目漱石

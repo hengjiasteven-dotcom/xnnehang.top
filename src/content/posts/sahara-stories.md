@@ -1,7 +1,7 @@
 ---
 title: 《撒哈拉的故事》阅读手记
 published: 2024-10-10
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 三毛

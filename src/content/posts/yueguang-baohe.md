@@ -1,7 +1,7 @@
 ---
 title: 月光宝盒后
 published: 2024-08-29
-category: 随笔
+category: 观后
 tags:
   - 电影
   - 大话西游

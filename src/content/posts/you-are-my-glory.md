@@ -1,7 +1,7 @@
 ---
 title: 你是我的荣耀
 published: 2025-01-15
-category: 随笔
+category: 观后
 tags:
   - 影评
   - 电视剧

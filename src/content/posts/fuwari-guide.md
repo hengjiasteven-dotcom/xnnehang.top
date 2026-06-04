@@ -1,7 +1,7 @@
 ---
 title: Fuwari 博客主题使用指南
 published: 2024-07-01
-category: 随笔
+category: 教程
 tags:
   - Fuwari
   - Blogging

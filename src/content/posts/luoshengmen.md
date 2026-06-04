@@ -1,7 +1,7 @@
 ---
 title: 《罗生门》阅读手记
 published: 2024-09-26
-category: 随笔
+category: 观后
 tags:
   - 读书
   - 芥川龙之介

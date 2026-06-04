@@ -1,7 +1,7 @@
 ---
 title: 存在之近，存在之远
 published: 2024-06-29
-category: 随笔
+category: 胡思乱想
 tags:
   - 哲学
   - 存在主义

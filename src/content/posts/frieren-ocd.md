@@ -1,7 +1,7 @@
 ---
 title: 从《葬送的芙莉莲》到心理强迫
 published: 2024-09-09
-category: 随笔
+category: 胡思乱想
 tags:
   - 日常
   - 动漫

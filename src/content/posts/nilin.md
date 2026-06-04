@@ -1,7 +1,7 @@
 ---
 title: 逆鳞之后
 published: 2024-08-20
-category: 随笔
+category: 观后
 tags:
   - 电影
   - 逆鳞

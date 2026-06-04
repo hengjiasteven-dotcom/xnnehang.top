@@ -1,7 +1,7 @@
 ---
 title: 大圣娶亲后
 published: 2024-09-01
-category: 随笔
+category: 观后
 tags:
   - 电影
   - 大话西游
