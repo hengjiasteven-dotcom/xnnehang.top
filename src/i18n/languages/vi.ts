@@ -50,4 +50,8 @@ export const vi: Translation = {
 
   [Key.graph]: 'Đồ thị',
   [Key.noWikiLinks]: 'Không có liên kết wiki',
+
+  [Key.shelf]: 'Giá sách',
+
+  [Key.seriesNav]: 'Loạt bài',
 }

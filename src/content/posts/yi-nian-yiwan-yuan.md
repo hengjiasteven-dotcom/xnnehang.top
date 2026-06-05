@@ -1,6 +1,7 @@
 ---
 title: 《以一年一萬元的價格》后
 published: 2024-07-08
+shelf: '漫画'
 category: 观后
 tags:
   - 读书

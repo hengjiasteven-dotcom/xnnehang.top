@@ -1,6 +1,7 @@
 ---
 title: 春娇与志明
 published: 2024-07-08
+shelf: '电影'
 category: 观后
 tags:
   - 电影

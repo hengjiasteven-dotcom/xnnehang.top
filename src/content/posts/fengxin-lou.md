@@ -1,6 +1,7 @@
 ---
 title: 风信，是个好名字。
 published: 2022-10-17
+shelf: '游戏'
 category: 观后
 tags:
   - 游戏

@@ -1,6 +1,8 @@
 ---
 title: 月光宝盒后
 published: 2024-08-29
+shelf: '电影'
+shelfCover: '../../assets/img/covers/yueguang-baohe-shelf.jpg'
 category: 观后
 tags:
   - 电影

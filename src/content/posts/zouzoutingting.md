@@ -1,6 +1,7 @@
 ---
 title: 《走走停停》后
 published: 2024-08-13
+shelf: '电影'
 category: 观后
 tags:
   - 电影

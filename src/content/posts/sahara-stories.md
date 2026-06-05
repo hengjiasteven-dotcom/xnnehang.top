@@ -1,6 +1,8 @@
 ---
 title: 《撒哈拉的故事》阅读手记
 published: 2024-10-10
+shelf: '书籍'
+subCategory: ['散文']
 category: 观后
 tags:
   - 读书

@@ -227,7 +227,7 @@ function onPointerUp() {
 
 <div
   bind:this={container}
-  class="graph-container relative w-full overflow-hidden rounded-xl {mode === 'full' ? 'min-h-[70vh]' : 'h-[280px]'} {dark ? 'bg-black/[0.03] shadow-inner' : 'bg-neutral-50 shadow-inner'}"
+  class="graph-container relative w-full overflow-hidden rounded-xl {mode === 'full' ? 'min-h-[70vh]' : 'h-[280px]'} {dark ? 'bg-white/[0.04] ring-1 ring-white/[0.06]' : 'bg-neutral-50 shadow-inner'}"
 >
   {#if simNodes.length === 0}
     <div class="flex h-full w-full items-center justify-center text-sm {dark ? 'text-white/40' : 'text-black/40'}">

@@ -1,6 +1,7 @@
 ---
 title: 逆鳞之后
 published: 2024-08-20
+shelf: '电影'
 category: 观后
 tags:
   - 电影

@@ -50,4 +50,8 @@ export const zh_CN: Translation = {
 
   [Key.graph]: '图谱',
   [Key.noWikiLinks]: '暂无引用关系',
+
+  [Key.shelf]: '书架',
+
+  [Key.seriesNav]: '系列',
 }

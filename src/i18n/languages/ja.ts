@@ -50,4 +50,8 @@ export const ja: Translation = {
 
   [Key.graph]: 'グラフ',
   [Key.noWikiLinks]: 'リンクなし',
+
+  [Key.shelf]: '本棚',
+
+  [Key.seriesNav]: 'シリーズ',
 }

@@ -1,6 +1,8 @@
 ---
 title: Vampires' Melody 吸血鬼的旋律 后
 published: 2024-09-01
+shelf: '游戏'
+shelfCover: '../../assets/img/covers/vampires-melody-shelf.jpg'
 category: 观后
 tags:
   - galgame

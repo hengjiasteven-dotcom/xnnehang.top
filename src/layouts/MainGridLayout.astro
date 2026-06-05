@@ -22,13 +22,15 @@ interface Props {
   lang?: string
   setOGTypeArticle?: boolean
   headings?: MarkdownHeading[]
+  hideSidebar?: boolean
+  showBanner?: boolean
 }
 
-const { title, banner, description, lang, setOGTypeArticle, headings = [] } = Astro.props
-const hasBannerCredit = siteConfig.banner.enable && siteConfig.banner.credit.enable
+const { title, banner, description, lang, setOGTypeArticle, headings = [], hideSidebar = false, showBanner = false } = Astro.props
+const hasBannerCredit = siteConfig.banner.enable && siteConfig.banner.credit.enable && showBanner
 const hasBannerLink = !!siteConfig.banner.credit.url
 
-const mainPanelTop = siteConfig.banner.enable
+const mainPanelTop = showBanner
   ? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
   : '5.5rem'
 ---
@@ -54,7 +56,7 @@ const mainPanelTop = siteConfig.banner.enable
 
   <!-- Banner -->
   {
-    siteConfig.banner.enable && (
+    showBanner && siteConfig.banner.enable && (
       <div
         id="banner-wrapper"
         class={`absolute z-10 w-full overflow-hidden transition duration-700`}
@@ -72,12 +74,13 @@ const mainPanelTop = siteConfig.banner.enable
   }
 
   <!-- Main content -->
-  <div class="pointer-events-none absolute z-30 w-full" style={`top: ${mainPanelTop}`}>
+  <div id="main-content-panel" class="pointer-events-none absolute z-30 w-full" style={`top: ${mainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="pointer-events-auto relative mx-auto max-w-[var(--page-width)]">
       <div
         id="main-grid"
-        class="right-0 left-0 mx-auto grid w-full grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] gap-4 px-0 transition duration-700 md:px-4 lg:grid-rows-[auto]"
+        class="right-0 left-0 mx-auto grid w-full grid-rows-[auto_1fr_auto] gap-4 px-0 transition duration-700 md:px-4 lg:grid-rows-[auto]"
+        style={hideSidebar ? 'grid-template-columns: auto' : 'grid-template-columns: 17.5rem auto'}
       >
         <!-- Banner image credit -->
         {
@@ -148,7 +151,7 @@ const mainPanelTop = siteConfig.banner.enable
             id="toc-wrapper"
             class:list={[
               'absolute top-0 -right-[var(--toc-width)] hidden w-[var(--toc-width)] items-center transition lg:block',
-              { 'toc-hide': siteConfig.banner.enable },
+              { 'toc-hide': showBanner },
             ]}
           >
             <div

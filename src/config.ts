@@ -17,7 +17,7 @@ export const siteConfig: SiteConfig = {
   },
   banner: {
     enable: true,
-    src: '/banner.webp',
+    src: '/banner-new.jpg',
     position: 'top',
     credit: {
       enable: false,
@@ -37,6 +37,8 @@ export const navBarConfig: NavBarConfig = {
   links: [
     LinkPreset.Home,
     LinkPreset.Archive,
+    LinkPreset.Series,
+    LinkPreset.Shelf,
     LinkPreset.Graph,
     LinkPreset.About,
     LinkPreset.Friends,

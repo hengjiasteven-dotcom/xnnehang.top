@@ -1,0 +1,70 @@
+---
+import path from 'node:path'
+import { getImage } from 'astro:assets'
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import MainGridLayout from '@layouts/MainGridLayout.astro'
+import { getSortedPosts } from '@utils/content-utils'
+import { getPostUrlBySlug, getDir } from '@utils/url-utils'
+import { formatDateToYYYYMMDD } from '@utils/date-utils'
+import ShelfView from '@components/ShelfView.svelte'
+import { render } from 'astro:content'
+
+// Pre-import all cover images at build time
+const imageFiles = import.meta.glob<ImageMetadata>('../content/posts/**/*.{jpg,jpeg,png,webp,gif}', {
+  import: 'default',
+})
+const assetFiles = import.meta.glob<ImageMetadata>('../assets/**/*.{jpg,jpeg,png,webp,gif}', {
+  import: 'default',
+})
+const allImageFiles = { ...imageFiles, ...assetFiles }
+
+async function resolveImage(src: string, postId: string): Promise<string> {
+  if (!src) return ''
+  if (src.startsWith('/') || src.startsWith('http')) return src
+
+  // Try to resolve relative path
+  const postDir = getDir(postId)
+  const normalized = path.normalize(path.join('../content/posts/', postDir, src)).replace(/\\/g, '/')
+  const loader = allImageFiles[normalized]
+  if (loader) {
+    const meta = await loader()
+    const optimized = await getImage({ src: meta, width: 900 })
+    return optimized.src
+  }
+  return ''
+}
+
+const allPosts = await getSortedPosts()
+const shelfPosts = allPosts.filter(p => p.data.shelf)
+
+const items = await Promise.all(
+  shelfPosts.map(async (post) => {
+    const { remarkPluginFrontmatter } = await render(post)
+    const rawCover = post.data.shelfCover || post.data.image || remarkPluginFrontmatter.firstImage || ''
+    const cover = await resolveImage(rawCover, post.id)
+    return {
+      id: post.id,
+      title: post.data.title,
+      shelf: post.data.shelf!,
+      subCategory: post.data.subCategory || [],
+      blurb: post.data.blurb || post.data.description || '',
+      cover,
+      url: getPostUrlBySlug(post.id),
+      published: formatDateToYYYYMMDD(post.data.published),
+      arxiv: post.data.arxiv || '',
+    }
+  })
+)
+---
+
+<MainGridLayout title={i18n(I18nKey.shelf)} description="书影音" hideSidebar={true}>
+  <div class="card-base w-full overflow-hidden rounded-[var(--radius-large)] p-6 md:p-8">
+    <div class="mb-6 flex flex-col items-start gap-1">
+      <h1 class="text-2xl font-bold text-black/90 dark:text-white/90">{i18n(I18nKey.shelf)}</h1>
+      <p class="text-sm text-black/50 dark:text-white/50">书影音，记录看过的一切。</p>
+    </div>
+
+    <ShelfView items={items} client:only="svelte" />
+  </div>
+</MainGridLayout>

@@ -1,6 +1,8 @@
 ---
 title: 长歌行：送君千里，终须一别
 published: 2025-02-16
+shelf: '电视剧'
+shelfCover: '../../assets/img/covers/changge-xing-shelf.jpg'
 category: 观后
 tags:
   - 动漫

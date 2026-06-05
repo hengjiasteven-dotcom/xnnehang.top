@@ -23,4 +23,12 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
     name: i18n(I18nKey.graph),
     url: '/graph/',
   },
+  [LinkPreset.Shelf]: {
+    name: i18n(I18nKey.shelf),
+    url: '/shelf/',
+  },
+  [LinkPreset.Series]: {
+    name: i18n(I18nKey.seriesNav),
+    url: '/series/',
+  },
 }

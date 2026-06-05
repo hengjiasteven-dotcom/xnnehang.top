@@ -1,6 +1,8 @@
 ---
 title: 没有明天的我们，在昨天相恋
 published: 2024-06-25
+shelf: '书籍'
+subCategory: ['小说']
 category: 观后
 tags:
   - 读书

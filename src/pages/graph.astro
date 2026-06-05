@@ -5,10 +5,10 @@ import MainGridLayout from '@layouts/MainGridLayout.astro'
 import GraphView from '@components/GraphView.svelte'
 ---
 
-<MainGridLayout title={i18n(I18nKey.graph)} description="Wiki-link graph">
+<MainGridLayout title={i18n(I18nKey.graph)} description="Wiki-link graph" hideSidebar={true}>
   <div class="card-base relative flex w-full flex-col overflow-hidden rounded-[var(--radius-large)] p-4">
-    <h1 class="mb-2 text-xl font-bold">{i18n(I18nKey.graph)}</h1>
-    <p class="text-50 mb-4 text-sm">文章之间的双向引用关系图谱。点击节点跳转到对应文章。</p>
+    <h1 class="mb-2 text-xl font-bold text-black/90 dark:text-white/90">{i18n(I18nKey.graph)}</h1>
+    <p class="mb-4 text-sm text-black/50 dark:text-white/50">文章之间的双向引用关系图谱。点击节点跳转到对应文章。</p>
     <GraphView mode="full" client:only="svelte" />
   </div>
 </MainGridLayout>

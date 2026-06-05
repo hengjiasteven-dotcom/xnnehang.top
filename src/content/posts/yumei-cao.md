@@ -1,6 +1,8 @@
 ---
 title: 虞美人草后
 published: 2024-07-17
+shelf: '书籍'
+subCategory: ['文学']
 category: 观后
 tags:
   - 读书

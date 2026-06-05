@@ -1,6 +1,7 @@
 ---
 title: 《大内密探零零发》后
 published: 2024-09-07
+shelf: '电影'
 category: 观后
 tags:
   - 电影

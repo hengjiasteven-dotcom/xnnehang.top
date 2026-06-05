@@ -1,6 +1,7 @@
 ---
 title: 大圣娶亲后
 published: 2024-09-01
+shelf: '电影'
 category: 观后
 tags:
   - 电影
