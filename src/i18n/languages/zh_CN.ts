@@ -47,4 +47,7 @@ export const zh_CN: Translation = {
   [Key.seriesCurrentLabel]: '当前',
 
   [Key.backlinks]: '引用了本文',
+
+  [Key.graph]: '图谱',
+  [Key.noWikiLinks]: '暂无引用关系',
 }

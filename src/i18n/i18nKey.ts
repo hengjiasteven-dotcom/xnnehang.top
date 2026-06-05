@@ -44,6 +44,9 @@ enum I18nKey {
   seriesCurrentLabel = 'seriesCurrentLabel',
 
   backlinks = 'backlinks',
+
+  graph = 'graph',
+  noWikiLinks = 'noWikiLinks',
 }
 
 export default I18nKey

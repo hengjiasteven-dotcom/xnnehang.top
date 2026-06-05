@@ -12,14 +12,21 @@ export type WikiGraph = Map<string, { outbound: WikiLinkInfo; inbound: { slug: s
  * Build the wiki link graph from all post bodies.
  * Runs at build time in getStaticPaths.
  */
-export async function buildWikiGraph(): Promise<WikiGraph> {
+export type WikiGraphResult = {
+  graph: WikiGraph
+  slugToTitle: Map<string, string>
+}
+
+/**
+ * Build the wiki link graph and also return the slug→title map.
+ * Used by graph serialization to get accurate titles.
+ */
+export async function buildWikiGraphWithTitles(): Promise<WikiGraphResult> {
   const allPosts = await getCollection('posts', ({ data }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
-  // Build title (lowercased) → slug map from frontmatter
   const titleToSlug = new Map<string, string>()
-  // Also build slug → title for reverse lookup
   const slugToTitle = new Map<string, string>()
   for (const post of allPosts) {
     const title = post.data.title.trim()
@@ -29,7 +36,6 @@ export async function buildWikiGraph(): Promise<WikiGraph> {
     }
   }
 
-  // Extract wiki links from each post body
   const graph: WikiGraph = new Map()
   const regex = WIKI_LINK_REGEX
 
@@ -61,7 +67,6 @@ export async function buildWikiGraph(): Promise<WikiGraph> {
     })
   }
 
-  // Build inbound links: for each post, find which other posts link to it
   for (const [slug, data] of graph) {
     for (const link of data.outbound.resolved) {
       const targetGraph = graph.get(link.slug)
@@ -71,5 +76,5 @@ export async function buildWikiGraph(): Promise<WikiGraph> {
     }
   }
 
-  return graph
+  return { graph, slugToTitle }
 }

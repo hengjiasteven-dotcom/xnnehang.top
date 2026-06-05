@@ -47,4 +47,7 @@ export const th: Translation = {
   [Key.seriesCurrentLabel]: 'ปัจจุบัน',
 
   [Key.backlinks]: 'อ้างอิงจาก',
+
+  [Key.graph]: 'กราฟ',
+  [Key.noWikiLinks]: 'ไม่มีลิงก์วิกิ',
 }

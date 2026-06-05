@@ -47,4 +47,7 @@ export const es: Translation = {
   [Key.seriesCurrentLabel]: 'actual',
 
   [Key.backlinks]: 'Referenciado desde',
+
+  [Key.graph]: 'Grafo',
+  [Key.noWikiLinks]: 'Sin enlaces wiki',
 }

@@ -47,4 +47,7 @@ export const tr: Translation = {
   [Key.seriesCurrentLabel]: 'mevcut',
 
   [Key.backlinks]: 'Buradan referans verilen',
+
+  [Key.graph]: 'Grafik',
+  [Key.noWikiLinks]: 'Wiki bağlantısı yok',
 }

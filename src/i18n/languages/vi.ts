@@ -47,4 +47,7 @@ export const vi: Translation = {
   [Key.seriesCurrentLabel]: 'hiện tại',
 
   [Key.backlinks]: 'Được tham chiếu từ',
+
+  [Key.graph]: 'Đồ thị',
+  [Key.noWikiLinks]: 'Không có liên kết wiki',
 }

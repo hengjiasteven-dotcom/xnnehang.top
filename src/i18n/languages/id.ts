@@ -47,4 +47,7 @@ export const id: Translation = {
   [Key.seriesCurrentLabel]: 'saat ini',
 
   [Key.backlinks]: 'Dirujuk dari',
+
+  [Key.graph]: 'Grafik',
+  [Key.noWikiLinks]: 'Tidak ada tautan wiki',
 }

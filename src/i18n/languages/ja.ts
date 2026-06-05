@@ -47,4 +47,7 @@ export const ja: Translation = {
   [Key.seriesCurrentLabel]: '現在',
 
   [Key.backlinks]: 'この記事を参照',
+
+  [Key.graph]: 'グラフ',
+  [Key.noWikiLinks]: 'リンクなし',
 }

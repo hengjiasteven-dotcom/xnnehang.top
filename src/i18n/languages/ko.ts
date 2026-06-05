@@ -47,4 +47,7 @@ export const ko: Translation = {
   [Key.seriesCurrentLabel]: '현재',
 
   [Key.backlinks]: '참조한 글',
+
+  [Key.graph]: '그래프',
+  [Key.noWikiLinks]: '위키 링크 없음',
 }
