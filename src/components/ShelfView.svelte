@@ -24,7 +24,7 @@ let activeCategory: string = $state('')
 let activeSubCategory: string = $state('')
 
 // --- Derived ---
-const categories = ['电影', '电视剧', '动漫', '书籍', '漫画', '游戏', '论文']
+const categories = ['书籍', '漫画', '游戏', '电影', '电视剧', '动漫', '论文']
 
 let availableCategories = $derived(
   categories.filter(c => items.some(item => item.shelf === c))
