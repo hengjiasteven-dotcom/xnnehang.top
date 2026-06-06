@@ -54,13 +54,13 @@ const mainPanelTop = showBanner
     </div>
   </div>
 
-  <!-- Banner -->
+  <!-- Banner (always rendered for Swup, visibility controlled by JS) -->
   {
-    showBanner && siteConfig.banner.enable && (
+    siteConfig.banner.enable && (
       <div
         id="banner-wrapper"
         class={`absolute z-10 w-full overflow-hidden transition duration-700`}
-        style={`top: -${BANNER_HEIGHT_EXTEND}vh`}
+        style={`top: -${BANNER_HEIGHT_EXTEND}vh${showBanner ? '' : '; display: none'}`}
       >
         <ImageWrapper
           id="banner"

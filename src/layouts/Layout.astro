@@ -509,6 +509,12 @@ function disableAnimation() {
     if (mainContentPanel) {
       mainContentPanel.style.top = isHome ? '' : '5.5rem'
     }
+    if (isHome) {
+      const banner = document.getElementById('banner')
+      if (banner) {
+        banner.classList.remove('opacity-0', 'scale-105')
+      }
+    }
   }
   updatePageLayout()
   if (window?.swup?.hooks) {
