@@ -31,7 +31,7 @@ const hasBannerCredit = siteConfig.banner.enable && siteConfig.banner.credit.ena
 const hasBannerLink = !!siteConfig.banner.credit.url
 
 const mainPanelTop = showBanner
-  ? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
+  ? `calc(${BANNER_HEIGHT}vh + 2rem)`
   : '5.5rem'
 ---
 
@@ -59,16 +59,27 @@ const mainPanelTop = showBanner
     siteConfig.banner.enable && (
       <div
         id="banner-wrapper"
-        class={`absolute z-10 w-full overflow-hidden transition duration-700`}
+        class={`absolute z-10 w-full transition duration-700`}
         style={`top: -${BANNER_HEIGHT_EXTEND}vh${showBanner ? '' : '; display: none'}`}
       >
-        <ImageWrapper
-          id="banner"
-          alt="Banner image of the blog"
-          class:list={['h-full scale-105 object-cover opacity-0 transition duration-700']}
-          src={siteConfig.banner.src}
-          position={siteConfig.banner.position}
-        />
+        <div class="h-full w-full overflow-hidden">
+          <ImageWrapper
+            id="banner"
+            alt="Banner image of the blog"
+            class:list={['h-full scale-105 object-cover opacity-0 transition duration-700']}
+            src={siteConfig.banner.src}
+            position={siteConfig.banner.position}
+          />
+        </div>
+        <!-- Wave transition - positioned to overflow below the banner -->
+        <div class="absolute -bottom-1 left-0 z-20 w-full">
+          <svg class="absolute bottom-0 w-[calc(100%+4rem)] -translate-x-8" viewBox="0 0 1440 100" preserveAspectRatio="none" style="height: 150px;">
+            <path d="M0,50 C120,80 240,20 360,50 C480,80 600,20 720,50 C840,80 960,20 1080,50 C1200,80 1320,20 1440,50 L1440,100 L0,100 Z" fill="var(--page-bg)" opacity="0.6"/>
+          </svg>
+          <svg class="absolute bottom-0 w-full" viewBox="0 0 1440 100" preserveAspectRatio="none" style="height: 120px;">
+            <path d="M0,55 C180,85 360,25 540,55 C720,85 900,25 1080,55 C1260,85 1380,35 1440,55 L1440,100 L0,100 Z" fill="var(--page-bg)" opacity="0.9"/>
+          </svg>
+        </div>
       </div>
     )
   }

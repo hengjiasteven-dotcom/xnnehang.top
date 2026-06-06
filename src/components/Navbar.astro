@@ -19,13 +19,13 @@ let links: NavBarLink[] = navBarConfig.links.map((item: NavBarLink | LinkPreset)
 })
 ---
 
-<div id="navbar" class="onload-animation z-50">
-  <div class="absolute -top-8 right-0 left-0 h-8 bg-[var(--card-bg)] transition"></div>
+<div id="navbar" class="onload-animation z-50 transition-all duration-300">
+  <div class="absolute -top-8 right-0 left-0 h-8 bg-[var(--card-bg)] transition navbar-bg"></div>
   <!-- used for onload animation -->
   <div
     class:list={[
       className,
-      'card-base mx-auto flex h-[4.5rem] max-w-[var(--page-width)] items-center justify-between !overflow-visible !rounded-t-none px-4',
+      'navbar-inner mx-auto flex h-[4.5rem] max-w-[var(--page-width)] items-center justify-between !overflow-visible !rounded-t-none px-4 transition-all duration-300',
     ]}
   >
     <a

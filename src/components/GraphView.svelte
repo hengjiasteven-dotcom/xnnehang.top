@@ -175,7 +175,15 @@ onMount(() => {
   if (mode === 'mini' && graphData) {
     runSimulation(graphData)
   } else if (mode === 'full') {
-    loadFullGraph()
+    // Delay slightly to ensure container has layout dimensions
+    setTimeout(() => {
+      if (container) {
+        const rect = container.getBoundingClientRect()
+        if (rect.width > 0) width = rect.width
+        if (rect.height > 0) height = Math.max(rect.height, 500)
+      }
+      loadFullGraph()
+    }, 50)
   }
 
   mounted = true

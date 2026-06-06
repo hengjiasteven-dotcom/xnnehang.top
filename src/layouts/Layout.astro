@@ -221,8 +221,19 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
     .enable-banner.is-home #sidebar-sticky {
       @apply top-[calc(1rem_-_var(--banner-height-extend))];
     }
-    .navbar-hidden {
-      @apply -translate-y-16 opacity-0;
+    #navbar-wrapper.navbar-transparent .navbar-inner {
+      background: transparent;
+      box-shadow: none;
+    }
+    #navbar-wrapper.navbar-transparent .navbar-bg {
+      opacity: 0;
+    }
+    #navbar-wrapper.navbar-opaque .navbar-inner {
+      background: var(--card-bg);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+    #navbar-wrapper.navbar-opaque .navbar-bg {
+      opacity: 1;
     }
   }
 </style>
@@ -424,19 +435,6 @@ function disableAnimation() {
     window.swup.hooks.on('link:click', () => {
       // Remove the delay for the first time page load
       document.documentElement.style.setProperty('--content-delay', '0ms')
-
-      // prevent elements from overlapping the navbar
-      if (!bannerEnabled) {
-        return
-      }
-      let threshold = window.innerHeight * (BANNER_HEIGHT / 100) - 72 - 16
-      let navbar = document.getElementById('navbar-wrapper')
-      if (!navbar || !document.body.classList.contains('lg:is-home')) {
-        return
-      }
-      if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-        navbar.classList.add('navbar-hidden')
-      }
     })
     window.swup.hooks.on('content:replace', initCustomScrollbar)
     window.swup.hooks.on('visit:start', (visit: { to: { url: string } }) => {
@@ -488,6 +486,24 @@ function disableAnimation() {
     document.addEventListener('swup:enable', setup)
   }
 
+  // Shared: update navbar transparent/opaque state based on page and scroll
+  function updateNavbarState() {
+    const navbarEl = document.getElementById('navbar-wrapper')
+    if (!navbarEl) return
+    const path = window.location.pathname
+    const isHome = path === '/' || /^\/\d+\/$/.test(path)
+    const scrollY = document.body.scrollTop || document.documentElement.scrollTop
+    const bannerMidpoint = window.innerHeight * (BANNER_HEIGHT / 100) / 2
+
+    if (isHome && scrollY <= bannerMidpoint) {
+      navbarEl.classList.add('navbar-transparent')
+      navbarEl.classList.remove('navbar-opaque')
+    } else {
+      navbarEl.classList.remove('navbar-transparent')
+      navbarEl.classList.add('navbar-opaque')
+    }
+  }
+
   // Sidebar and banner visibility: show only on homepage
   function updatePageLayout() {
     const path = window.location.pathname
@@ -507,7 +523,7 @@ function disableAnimation() {
       bannerWrapper.style.display = isHome ? '' : 'none'
     }
     if (mainContentPanel) {
-      mainContentPanel.style.top = isHome ? '' : '5.5rem'
+      mainContentPanel.style.top = isHome ? 'calc(100vh + 2rem)' : '5.5rem'
     }
     if (isHome) {
       const banner = document.getElementById('banner')
@@ -515,6 +531,7 @@ function disableAnimation() {
         banner.classList.remove('opacity-0', 'scale-105')
       }
     }
+    updateNavbarState()
   }
   updatePageLayout()
   if (window?.swup?.hooks) {
@@ -554,22 +571,7 @@ function disableAnimation() {
     }
 
     if (!bannerEnabled) return
-    if (navbar) {
-      const NAVBAR_HEIGHT = 72
-      const MAIN_PANEL_EXCESS_HEIGHT = MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16 // The height the main panel overlaps the banner
-
-      let bannerHeight = BANNER_HEIGHT
-      if (document.body.classList.contains('lg:is-home') && window.innerWidth >= 1024) {
-        bannerHeight = BANNER_HEIGHT_HOME
-      }
-      let threshold =
-        window.innerHeight * (bannerHeight / 100) - NAVBAR_HEIGHT - MAIN_PANEL_EXCESS_HEIGHT - 16
-      if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-        navbar.classList.add('navbar-hidden')
-      } else {
-        navbar.classList.remove('navbar-hidden')
-      }
-    }
+    updateNavbarState()
   }
   window.onscroll = scrollFunction
 
