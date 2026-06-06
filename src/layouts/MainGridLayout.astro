@@ -44,14 +44,16 @@ const mainPanelTop = showBanner
 >
   <!-- Navbar -->
   <slot slot="head" name="head" />
-  <div
-    id="top-row"
-    class="pointer-events-none relative z-50 mx-auto max-w-[var(--page-width)] px-0 transition-all duration-700 md:px-4"
-    class:list={['']}
-  >
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
+  <div id="navbar-wrapper" class="pointer-events-auto fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="mx-auto max-w-[var(--page-width)] px-0 md:px-4">
       <Navbar />
     </div>
+  </div>
+  <div
+    id="top-row"
+    class="pointer-events-none relative z-40 mx-auto max-w-[var(--page-width)] px-0 transition-all duration-700 md:px-4"
+    class:list={['']}
+  >
   </div>
 
   <!-- Banner (always rendered for Swup, visibility controlled by JS) -->
@@ -161,7 +163,7 @@ const mainPanelTop = showBanner
           <div
             id="toc-wrapper"
             class:list={[
-              'absolute top-0 -right-[var(--toc-width)] hidden w-[var(--toc-width)] items-center transition lg:block',
+              'absolute top-0 -left-[var(--toc-width)] hidden w-[var(--toc-width)] items-center transition lg:block',
               { 'toc-hide': showBanner },
             ]}
           >

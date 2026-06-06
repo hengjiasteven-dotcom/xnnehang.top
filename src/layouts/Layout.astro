@@ -235,6 +235,11 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
     #navbar-wrapper.navbar-opaque .navbar-bg {
       opacity: 1;
     }
+    #navbar-wrapper.navbar-hidden {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 </style>
 
@@ -532,6 +537,16 @@ function disableAnimation() {
       }
     }
     updateNavbarState()
+    const navbarWrapper = document.getElementById('navbar-wrapper')
+    if (navbarWrapper) {
+      const isPost = path.startsWith('/posts/')
+      const currentScrollY = document.body.scrollTop || document.documentElement.scrollTop
+      if (isPost && currentScrollY > NAVBAR_HIDE_THRESHOLD) {
+        navbarWrapper.classList.add('navbar-hidden')
+      } else {
+        navbarWrapper.classList.remove('navbar-hidden')
+      }
+    }
   }
   updatePageLayout()
   if (window?.swup?.hooks) {
@@ -545,28 +560,33 @@ function disableAnimation() {
   let backToTopBtn = document.getElementById('back-to-top-btn')
   let toc = document.getElementById('toc-wrapper')
   let navbar = document.getElementById('navbar-wrapper')
+  const NAVBAR_HIDE_THRESHOLD = 30
   function scrollFunction() {
     let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
+    const currentScrollY = document.body.scrollTop || document.documentElement.scrollTop
 
     if (backToTopBtn) {
-      if (
-        document.body.scrollTop > bannerHeight ||
-        document.documentElement.scrollTop > bannerHeight
-      ) {
+      if (currentScrollY > bannerHeight) {
         backToTopBtn.classList.remove('hide')
       } else {
         backToTopBtn.classList.add('hide')
       }
     }
 
-    if (bannerEnabled && toc) {
-      if (
-        document.body.scrollTop > bannerHeight ||
-        document.documentElement.scrollTop > bannerHeight
-      ) {
+    if (toc) {
+      if (currentScrollY > window.innerHeight * 0.3) {
         toc.classList.remove('toc-hide')
       } else {
         toc.classList.add('toc-hide')
+      }
+    }
+
+    if (navbar) {
+      const isPost = window.location.pathname.startsWith('/posts/')
+      if (isPost && currentScrollY > NAVBAR_HIDE_THRESHOLD) {
+        navbar.classList.add('navbar-hidden')
+      } else {
+        navbar.classList.remove('navbar-hidden')
       }
     }
 
