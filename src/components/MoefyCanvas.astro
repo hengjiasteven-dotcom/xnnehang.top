@@ -120,7 +120,12 @@
     if (window.swup) {
       handleSwupSetup()
     } else {
-      document.addEventListener('swup:enable', handleSwupSetup)
+      const id = setInterval(() => {
+        if (window?.swup?.hooks) {
+          clearInterval(id)
+          handleSwupSetup()
+        }
+      }, 50)
     }
   }
 </script>

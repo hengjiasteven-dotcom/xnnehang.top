@@ -7,13 +7,15 @@ import Tag from './Tags.astro'
 
 interface Props {
   class?: string
+  style?: string
   headings?: MarkdownHeading[]
 }
 
 const className = Astro.props.class
+const style = Astro.props.style
 ---
 
-<div id="sidebar" class:list={[className, 'w-full']}>
+<div id="sidebar" class:list={[className, 'w-full']} style={style}>
   <div class="mb-4 flex w-full flex-col gap-4">
     <Profile />
   </div>
