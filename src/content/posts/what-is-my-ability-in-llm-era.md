@@ -10,6 +10,7 @@ tags:
 description: 重度使用 AI coding 一年后，我的编码能力几乎丧失殆尽。那么我究竟还剩下什么能力？
 series:
   - LLM
+image: ../../assets/img/covers/neko.jpg
 ---
 
 我从 GPT 5 时期开始重度依赖 AI coding，靠着 Linux.do 上的低价 team 号入了坑。后来接触反代，把 GPT 接入 Claude Code，体验有了质的提升。
