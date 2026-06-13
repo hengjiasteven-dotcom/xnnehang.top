@@ -8,6 +8,7 @@ tags:
   - 读书
   - 王小波
 description: 王小波《一只特立独行的猪》阅读手记
+image: ../../assets/img/covers/一只特立独行的猪.jpg
 series:
   - 阅读
 ---

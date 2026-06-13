@@ -9,6 +9,7 @@ tags:
   - 存在主义
   - 哲学
 description: 关于存在主义中死亡、记忆与强迫的思考
+image: ../../assets/img/covers/存在主义.jpg
 series:
   - 阅读
   - 哲学思考
