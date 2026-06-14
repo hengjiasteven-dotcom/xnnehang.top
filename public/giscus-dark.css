@@ -1,31 +1,122 @@
 /* Giscus custom theme — Dark (matches blog's dark mode, hue=210) */
 
 :root {
+  /* foreground / text */
+  --color-fg-default: #e2e8f0;
+  --color-fg-muted: #94a3b8;
+  --color-fg-subtle: #64748b;
+
+  /* canvas / background */
+  --color-canvas-default: #2d3447;
+  --color-canvas-overlay: #2d3447;
+  --color-canvas-inset: #161d2b;
+  --color-canvas-subtle: #1c2333;
+
+  /* accent / primary */
   --color-primary: #60a5fa;
   --color-accent-fg: #93c5fd;
   --color-accent-emphasis: #60a5fa;
-  --color-bg: #2d3447;
-  --color-canvas: #1c2333;
-  --color-canvas-inset: #161d2b;
-  --color-text: #e2e8f0;
-  --color-text-secondary: #94a3b8;
-  --color-border: #4a5568;
-  --color-input-bg: #2d3447;
-  --color-input-border: #4a5568;
-  --color-input-text: #e2e8f0;
+  --color-accent-subtle: #1e3a5f;
+  --color-accent-muted: #1e40af;
+
+  /* borders */
+  --color-border-default: #4a5568;
+  --color-border-muted: #3d4559;
+  --color-border-subtle: #374151;
+  --color-border-accent: #3b82f6;
+
+  /* buttons — default */
   --color-btn-bg: #3d4559;
-  --color-btn-hover: #4a5470;
+  --color-btn-hover-bg: #4a5470;
+  --color-btn-active-bg: #556180;
+  --color-btn-selected-bg: #556180;
   --color-btn-text: #e2e8f0;
+  --color-btn-border: #4a5568;
+  --color-btn-hover-text: #f1f5f9;
+  --color-btn-counter-bg: #4a5568;
+
+  /* buttons — primary */
   --color-btn-primary-bg: #3b82f6;
+  --color-btn-primary-hover-bg: #60a5fa;
   --color-btn-primary-text: #ffffff;
-  --color-btn-primary-hover: #60a5fa;
+  --color-btn-primary-disabled-text: #94a3b8;
+  --color-btn-primary-counter-bg: #2563eb;
+
+  /* inputs */
+  --color-input-bg: #1c2333;
+  --color-input-contrast-bg: #161d2b;
+  --color-input-border: #4a5568;
+  --color-input-focus-border: #60a5fa;
+  --color-input-text: #e2e8f0;
+  --color-input-placeholder-text: #64748b;
+
+  /* labels */
+  --color-label-fg: #94a3b8;
+  --color-label-border: #4a5568;
+  --color-label-bg: #3d4559;
+  --color-label-secondary-bg: #2d3447;
+  --color-label-secondary-border: #4a5568;
+
+  /* icons */
+  --color-icon-primary: #e2e8f0;
+  --color-icon-secondary: #94a3b8;
+  --color-icon-tertiary: #64748b;
+  --color-icon-info: #60a5fa;
+  --color-icon-danger: #f87171;
+  --color-icon-success: #4ade80;
+  --color-icon-warning: #fbbf24;
+
+  /* social / reaction / state */
+  --color-social-fg: #94a3b8;
+  --color-success-fg: #4ade80;
+  --color-danger-fg: #f87171;
+  --color-done-fg: #a78bfa;
+
+  /* sidebar / nav */
   --color-sidebar-bg: #1c2333;
+
+  /* segmented control (Write/Preview tabs) */
+  --color-segmented-control-bg: #1c2333;
+  --color-segmented-control-button-bg: #2d3447;
+  --color-segmented-control-button-selected-border: #60a5fa;
+  --color-segmented-control-button-hover-bg: #3d4559;
+
+  /* tooltip */
   --color-tooltip-bg: #e2e8f0;
   --color-tooltip-text: #1c2333;
+
+  /* popup / dropdown */
   --color-popup-bg: #2d3447;
   --color-popup-border: #4a5568;
-  --color-link-fg: #60a5fa;
-  --color-link-hover: #93c5fd;
-  --color-link-active: #bfdbfe;
+
+  /* menu / select */
+  --color-select-menu-bg-active: #3d4559;
+  --color-select-menu-border-selected: #60a5fa;
+
+  /* tree view */
+  --color-tree-view-item-checked-fg: #60a5fa;
+
+  /* header */
+  --color-header-bg: #1c2333;
+  --color-header-text: #94a3b8;
+  --color-header-logo: #e2e8f0;
+
+  /* neutral */
+  --color-neutral-emphasis: #6b7280;
+  --color-neutral-muted: rgba(255, 255, 255, 0.08);
+  --color-neutral-subtle: rgba(255, 255, 255, 0.04);
+
+  /* attention / alert */
+  --color-attention-fg: #fbbf24;
+  --color-attention-emphasis: #d97706;
+  --color-attention-subtle: #78350f;
+
+  /* other */
   --color-selection-bg: #3b82f6;
+  --color-primer-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --color-primer-shadow-focus: 0 0 0 3px rgba(96, 165, 250, 0.3);
+  --color-shadow-small: 0 1px 0 rgba(255, 255, 255, 0.03);
+  --color-shadow-medium: 0 3px 6px rgba(0, 0, 0, 0.4);
+  --color-shadow-large: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --color-shadow-extra-large: 0 12px 28px rgba(0, 0, 0, 0.5);
 }
