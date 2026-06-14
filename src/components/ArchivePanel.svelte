@@ -16,6 +16,17 @@ categories = params.has("category") ? params.getAll("category") : [];
 series = params.has("series") ? params.getAll("series") : [];
 const uncategorized = params.get("uncategorized");
 
+const categoryDescriptions: Record<string, string> = {
+  '资源': '不涉及具体知识传播或深度思考，只是纯粹地推荐一些好用的渠道、应用和信息。',
+  '观后': '看完一本书、一部剧、一部电影或打通一款游戏后，把那些不想忘记的感受留下来。',
+  '教程': '流程类记录。某个功能怎么配置，某个工具怎么部署，踩过坑之后沉淀下来的完整步骤。',
+  '思考': '由某件事或某个物触发的更深层思考。不一定分清对错，但让我自洽。',
+  '边写边学': '无营养的探索过程。如果读者实在没找到合适的教程案例，也许能在我的摸索过程中找到想要的东西。',
+}
+
+let activeDescription: string | undefined = undefined
+let activeCategory: string | undefined = undefined
+
 interface Post {
 	slug: string;
 	data: {
@@ -53,6 +64,14 @@ onMount(async () => {
 				Array.isArray(post.data.tags) &&
 				post.data.tags.some((tag) => tags.includes(tag)),
 		);
+	}
+
+	if (categories.length === 1) {
+		activeCategory = categories[0]
+		activeDescription = categoryDescriptions[activeCategory]
+	} else {
+		activeDescription = undefined
+		activeCategory = undefined
 	}
 
 	if (categories.length > 0) {
@@ -97,6 +116,11 @@ onMount(async () => {
 </script>
 
 <div class="card-base px-8 py-6">
+    {#if activeDescription}
+        <div class="mb-4 border-b border-dashed border-[var(--line-divider)] pb-3">
+            <p class="text-sm text-black/50 dark:text-white/50">{activeDescription}</p>
+        </div>
+    {/if}
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
