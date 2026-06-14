@@ -1,7 +1,7 @@
 ---
 title: 单图≠多图：多图理解时 VLM 为什么更容易"胡说"，以及一个两阶段解法
 published: 2026-02-08
-category: 胡思乱想
+category: 边写边学
 tags:
   - VLM
   - 多模态

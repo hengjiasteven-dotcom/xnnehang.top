@@ -3,7 +3,7 @@ title: Attention is Limited - Lost in the Middle
 published: 2025-07-06
 shelf: '论文'
 arxiv: 'https://arxiv.org/abs/2307.03172'
-category: 胡思乱想
+category: 思考
 tags:
   - LLM
   - Attention

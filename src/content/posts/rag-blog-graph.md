@@ -1,7 +1,7 @@
 ---
 title: 做过长期系统项目再看：RAG 怪兽是否适用于个人博客系统的图谱构建？
 published: 2026-06-06
-category: 胡思乱想
+category: 思考
 tags:
   - LLM
   - RAG

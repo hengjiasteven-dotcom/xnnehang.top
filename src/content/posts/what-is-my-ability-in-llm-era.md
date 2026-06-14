@@ -1,7 +1,7 @@
 ---
 title: 大模型时代：我的能力究竟是什么？
 published: 2026-06-12
-category: 胡思乱想
+category: 思考
 tags:
   - LLM
   - AI Coding

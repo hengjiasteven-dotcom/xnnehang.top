@@ -3,7 +3,7 @@ title: 存在主义阅读手记
 published: 2024-06-20
 shelf: '书籍'
 subCategory: ['心理学']
-category: 胡思乱想
+category: 思考
 tags:
   - 读书
   - 存在主义
