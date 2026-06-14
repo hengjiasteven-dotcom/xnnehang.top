@@ -33,7 +33,6 @@
     script.setAttribute('data-input-position', 'top')
     script.setAttribute('data-theme', getTheme())
     script.setAttribute('data-lang', 'zh-CN')
-    script.setAttribute('data-loading', 'lazy')
     script.setAttribute('crossorigin', 'anonymous')
     script.async = true
     container.appendChild(script)
