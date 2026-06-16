@@ -81,7 +81,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 <!doctype html>
 <html
   lang={siteLang}
-  class="bg-[var(--page-bg)] text-[14px] transition md:text-[16px]"
+  class="overflow-x-hidden bg-[var(--page-bg)] text-[14px] transition md:text-[16px]"
   data-overlayscrollbars-initialize
 >
   <head>
@@ -178,7 +178,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
     />
   </head>
   <body
-    class="min-h-screen transition"
+    class="min-h-screen overflow-x-hidden transition"
     class:list={[{ 'lg:is-home': isHomePage, 'enable-banner': enableBanner }]}
     data-overlayscrollbars-initialize
   >
