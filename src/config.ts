@@ -17,8 +17,9 @@ export const siteConfig: SiteConfig = {
   },
   banner: {
     enable: true,
-    src: '/banner-new.jpg',
-    position: 'top',
+    src: '/banner-desktop.jpg',
+    mobileSrc: '/banner-mobile.jpg',
+    position: 'center',
     credit: {
       enable: false,
       text: '',
