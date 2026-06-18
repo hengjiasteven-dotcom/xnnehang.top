@@ -22,7 +22,7 @@ series:
 
 插件市场里可以直接安装。
 
-![YOLO 插件安装](../../assets/img/obsidian-yolo/pasted_image_20260618130052.png)
+![YOLO 插件安装](<../../assets/img/obsidian-yolo/Pasted image 20260618130052.png>)
 
 
 至于为什么叫做 YOLO，这个可以看作者博客:[YOLO 开发日志（一）：为什么要开发 YOLO](https://www.lapis.cafe/posts/ai-and-deep-learning/yolo/yolo-releasenote-01/)
@@ -38,8 +38,8 @@ series:
 - newapi 不加 `/v1`，可以获取模型列表，但是其实没有请求到模型本身，会直接返回 200。在 PR 里解决后，会抛出回复为空的提示，并且提示添加 `/v1`。
 - 关闭推理时会传入 `"none"`到 `"thinking"`，而我不清楚是 newapi 还是 deepseek-v4-flash 的问题，它会抛出 `"thinking"` 参数列表不包含 `"none"` 的情况。同时，我还从作者的 bot 猫猫那里学了点东西。
 
-![Provider 配置界面](../../assets/img/obsidian-yolo/pasted_image_20260618134726.png)
-![Provider 配置界面 2](../../assets/img/obsidian-yolo/pasted_image_20260618135345.png)
+![Provider 配置界面](<../../assets/img/obsidian-yolo/Pasted image 20260618134726.png>)
+![Provider 配置界面 2](<../../assets/img/obsidian-yolo/Pasted image 20260618135345.png>)
 
 没想到猫猫都比我会审查代码。
 
@@ -53,22 +53,22 @@ series:
 
 默认 Agent 里会显示所有工具均已经启用。
 
-![Agent 工具配置](../../assets/img/obsidian-yolo/pasted_image_20260618160903.png)
+![Agent 工具配置](<../../assets/img/obsidian-yolo/Pasted image 20260618160903.png>)
 
 但是在和 Agent 对话时会发现其实它并不兼容终端 shell 命令的运行。需要在【 Agent-Agents-Default(或者新增的 Agent)】 的工具里面再次启用。
 
-![Agent 工具启用](../../assets/img/obsidian-yolo/pasted_image_20260618161202.png)
+![Agent 工具启用](<../../assets/img/obsidian-yolo/Pasted image 20260618161202.png>)
 
 同时还得保证运行的命令不在禁止列表里。【Agent-管理工具-终端命令-配置】
 
-![终端命令配置](../../assets/img/obsidian-yolo/pasted_image_20260618161405.png)
+![终端命令配置](<../../assets/img/obsidian-yolo/Pasted image 20260618161405.png>)
 
 以及更推荐给它写个关于 git 的 skill，放在 `YOLO/skills` 当中。
 ## 功能体验
 
 ### 对话侧边栏
 
-![对话侧边栏](../../assets/img/obsidian-yolo/pasted_image_20260618162058.png)
+![对话侧边栏](<../../assets/img/obsidian-yolo/Pasted image 20260618162058.png>)
 
 侧边栏输入的状态里似乎包含当前页面的博客，以及所在的行数与片段内容。用起来并没有独立开来的割裂感，反而融合得相当不错，使用起来很丝滑。有时候可以带来灵感，以及可以把 git 同步这些琐事都交给它，避免了仓库懒得手动同步最后数据丢了的情况。
 
@@ -76,7 +76,7 @@ series:
 
 可以用 `/` + `空格`  呼出快捷对话框讲明需求，双手可以不必离开键盘。
 
-![快捷对话框](../../assets/img/obsidian-yolo/pasted_image_20260618163233.png)
+![快捷对话框](<../../assets/img/obsidian-yolo/Pasted image 20260618163233.png>)
 
 这点的设计哲学非常漂亮，因为右手频繁在鼠标和键盘之间切换容易让人思路断开。
 
@@ -84,7 +84,7 @@ series:
 
 可以通过 `，`、`。`、`\n`(换行)等符号触发自动补全，符号可自行增删，触发后等待一定时间（可自行配置）后，就可以触发大模型的补全。 
 
-![Tab 补全配置](../../assets/img/obsidian-yolo/pasted_image_20260618163412.png)
+![Tab 补全配置](<../../assets/img/obsidian-yolo/Pasted image 20260618163412.png>)
 
 但是可能是因为我的思路比较奇怪，通常模型跟不上我的思路。比如我写到一个观点，脑子里已经跳到三层联想之后了，模型还在第一层猜我接下来要说什么。
 
@@ -94,7 +94,7 @@ series:
 
 #### Markdown 源记忆文件
 
-![记忆系统界面](../../assets/img/obsidian-yolo/pasted_image_20260618163928.png)
+![记忆系统界面](<../../assets/img/obsidian-yolo/Pasted image 20260618163928.png>)
 
 记录的都是用户偏好，整体而言和 mem0 相似。这类记忆记录有一个优点是更容易懂用户的需求，很多东西有时候不必强调就能丝滑完成。但仅仅记录这样的 Memory，不能影响模型本身的回复风格，或者说刻意保持模型的风格是中正的，公平的，平和的，没有个性的。
 
