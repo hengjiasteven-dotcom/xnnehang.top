@@ -25,10 +25,11 @@ nyakku.moe/
 - 图片存放于 `src/assets/img/`，这是一个 **git submodule**（指向 `image-hosting` 仓库）
 - 封面图统一放在 `src/assets/img/covers/` 下
 - 文章中引用图片使用相对路径：`../../assets/img/covers/filename.jpg`
-- 新增图片时：
-  1. 复制图片到 submodule 对应目录
-  2. 在 submodule 内 commit + push
+- 新增图片或修改 submodule 内文件时：
+  1. 操作 submodule 内的文件
+  2. 先进入 submodule 目录，`git status` 确认有实际改动再 commit + push
   3. 在主仓库 stage submodule 变更，commit + push
+- 注意：`nyakku.moe` 和 `obsidan/xnnehang.top.factory` 挂载的是同一个 image-hosting 仓库，submodule 的改动只需在一方提交推送即可，另一方下次 `git submodule update` 后自动同步
 
 ## 博客发布工作流
 
