@@ -53,5 +53,7 @@ export const en: Translation = {
 
   [Key.shelf]: 'Shelf',
 
+  [Key.memo]: 'Murmurs',
+
   [Key.seriesNav]: 'Series',
 }

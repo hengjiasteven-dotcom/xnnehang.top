@@ -1,0 +1,78 @@
+---
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import MainGridLayout from '@layouts/MainGridLayout.astro'
+import memos from '../content/memos/memos.json'
+
+const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
+---
+
+<MainGridLayout title={i18n(I18nKey.memo)} hideSidebar={true}>
+  <div class="card-base w-full overflow-hidden rounded-[var(--radius-large)] p-6 md:p-8">
+    <div class="mb-6 flex flex-col items-start gap-1">
+      <p class="text-50 text-sm">一些灵光一现的碎片。</p>
+    </div>
+
+    <div class="relative">
+      <!-- Timeline vertical line -->
+      <div class="memo-line absolute left-[15px] top-0 bottom-4 w-px"></div>
+
+      <ul class="flex flex-col gap-8">
+        {
+          sorted.map((memo) => (
+            <li class="group relative flex items-start gap-5 pl-10">
+              <!-- Timeline dot -->
+              <div class="absolute left-[9px] top-[0.35rem] z-10 flex h-[14px] w-[14px] items-center justify-center">
+                <div class="memo-dot h-3 w-3 rounded-full transition group-hover:scale-125"></div>
+              </div>
+
+              <!-- Card -->
+              <div class="memo-card w-full rounded-xl px-5 py-4 transition">
+                <div class="mb-2 text-xs font-medium text-[var(--primary)]">
+                  {memo.date}
+                </div>
+                <p class="text-75 text-[0.95rem] leading-relaxed">
+                  {memo.content}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</MainGridLayout>
+
+<style>
+  .memo-line {
+    background: linear-gradient(
+      to bottom,
+      var(--primary) 0%,
+      color-mix(in oklch, var(--primary) 30%, transparent) 100%
+    );
+  }
+
+  .memo-dot {
+    background: var(--primary);
+    box-shadow: 0 0 0 3px var(--card-bg);
+  }
+
+  .memo-card {
+    background: oklch(0.985 0.003 var(--hue));
+    border: 1px solid color-mix(in oklch, var(--primary) 12%, transparent);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 1px 2px rgba(0, 0, 0, 0.02);
+  }
+
+  :root.dark .memo-card {
+    background: var(--page-bg);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 0 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .memo-card:hover {
+    border-color: color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+</style>

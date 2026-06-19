@@ -53,5 +53,7 @@ export const zh_CN: Translation = {
 
   [Key.shelf]: '书架',
 
+  [Key.memo]: '碎碎念',
+
   [Key.seriesNav]: '系列',
 }
