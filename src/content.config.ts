@@ -34,7 +34,15 @@ const specCollection = defineCollection({
   schema: z.object({}),
 })
 
+const memoCollection = defineCollection({
+  loader: glob({ base: './src/content/memos', pattern: '**/*.md' }),
+  schema: z.object({
+    date: z.string(),
+  }),
+})
+
 export const collections = {
   posts: postsCollection,
   spec: specCollection,
+  memos: memoCollection,
 }

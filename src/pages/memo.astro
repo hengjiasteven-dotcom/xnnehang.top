@@ -1,10 +1,18 @@
 ---
+import { getCollection, render } from 'astro:content'
+import Markdown from '@components/misc/Markdown.astro'
 import I18nKey from '@i18n/i18nKey'
 import { i18n } from '@i18n/translation'
 import MainGridLayout from '@layouts/MainGridLayout.astro'
-import memos from '../content/memos/memos.json'
 
-const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
+const memos = await getCollection('memos')
+const sorted = memos.sort((a, b) => b.data.date.localeCompare(a.data.date))
+const rendered = await Promise.all(
+  sorted.map(async (memo) => {
+    const { Content } = await render(memo)
+    return { date: memo.data.date, Content }
+  })
+)
 ---
 
 <MainGridLayout title={i18n(I18nKey.memo)} hideSidebar={true}>
@@ -19,7 +27,7 @@ const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
 
       <ul class="flex flex-col gap-8">
         {
-          sorted.map((memo) => (
+          rendered.map((memo) => (
             <li class="group relative flex items-start gap-5 pl-10">
               <!-- Timeline dot -->
               <div class="absolute left-[9px] top-[0.35rem] z-10 flex h-[14px] w-[14px] items-center justify-center">
@@ -28,12 +36,12 @@ const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
 
               <!-- Card -->
               <div class="memo-card w-full rounded-xl px-5 py-4 transition">
-                <div class="mb-2 text-xs font-medium text-[var(--primary)]">
+                <div class="mb-1 text-xs font-medium text-[var(--primary)]">
                   {memo.date}
                 </div>
-                <p class="text-75 text-[0.95rem] leading-relaxed memo-content">
-                  {memo.content}
-                </p>
+                <Markdown class="memo-content">
+                  <memo.Content />
+                </Markdown>
               </div>
             </li>
           ))
@@ -74,9 +82,5 @@ const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
 
   .memo-card:hover {
     border-color: color-mix(in oklch, var(--primary) 30%, transparent);
-  }
-
-  .memo-content {
-    white-space: pre-line;
   }
 </style>
