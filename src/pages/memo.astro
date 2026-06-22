@@ -31,7 +31,7 @@ const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
                 <div class="mb-2 text-xs font-medium text-[var(--primary)]">
                   {memo.date}
                 </div>
-                <p class="text-75 text-[0.95rem] leading-relaxed">
+                <p class="text-75 text-[0.95rem] leading-relaxed memo-content">
                   {memo.content}
                 </p>
               </div>
@@ -74,5 +74,9 @@ const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date))
 
   .memo-card:hover {
     border-color: color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+
+  .memo-content {
+    white-space: pre-line;
   }
 </style>
