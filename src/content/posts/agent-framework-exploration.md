@@ -14,7 +14,7 @@ image: ../../assets/img/agent-framework-exploration/hero-bg-1.png
 > [!NOTE]
 > **AI 协作声明：** 本文由 Xnne 与 [Korewaxnne](https://github.com/xnne-bot)（AI 助手，基于 Claude Opus 4.6）共同撰写。Xnne 提供了技术实践、业务思考与核心设计决策，Korewaxnne 协助组织了全文结构与技术表述。
 
-> 我们从 LangChain 到 Dify/n8n，从 OpenHands/Suna 到 Claude Code，学习过每一个主流 Agent 框架，但没有一个能完美适配我们的业务需求。于是我们开始思考：Agent 时代，一个好的底层框架到底应该长什么样？
+> 我们从 LangChain/Langgraph 到 Dify/n8n，从 OpenHands/Suna 到 Claude Code，了解过每一个主流 Agent 框架，但没有一个能完美适配我们的业务需求。后来我们发现，问题不在于"选哪个框架"，而在于：**当主流框架的抽象边界和你的业务需求对不齐时，你该怎么办？**
 
 ## 一个不太常见的 Agent 场景
 
@@ -24,7 +24,7 @@ image: ../../assets/img/agent-framework-exploration/hero-bg-1.png
 
 **调用前**：不是用户说了话才响应。游戏伴玩场景中，一个 OCR 主动对话插件会持续轮询屏幕画面，当它检测到游戏内关键事件（比如角色死亡、任务完成、场景切换），会主动触发 LLM 发起对话，而不是等用户开口。这意味着框架必须支持"非用户触发的对话轮次"。
 
-**调用中**：LLM 的流式输出不能简单地拼接成一个完整字符串再返回。每一个 token 都需要实时进入断句器，切成自然语句后立刻发送给 GPT-SoVITS / Qwen-TTS 引擎合成语音，同时提取情绪标签驱动 Live2D 模型表情变化。这是一个 token 级别的多路分发管线，延迟敏感度极高。在同一轮对话中，LLM 还可能调用多个工具（网页搜索、文件读写、截图分析），工具调用完成后继续流式生成，最多循环 6 轮。
+**调用中**：LLM 的流式输出不能简单地拼接成一个完整字符串再返回。每一个 token 都需要实时进入断句器，切成自然语句后立刻发送给 GPT-SoVITS / Qwen-TTS 引擎合成语音，同时提取情绪标签驱动 Live2D 模型表情变化。这是一个 token 级别的多路分发管线，延迟敏感度极高。在同一轮对话中，LLM 还可能调用多个工具（网页搜索、文件读写、截图分析），工具调用完成后继续流式生成。**工具调用的 token 也不会攒成完整 JSON 再解析——框架一边接收流式 token 一边解析出结构化的事件，和文本 token 在同一个流中并行下发。**
 
 **调用后**：一轮对话结束，不是存到 SQLite 就完事了。对话内容会被发送到 Memory Bench 服务，经过 mem0 做记忆抽取和聚合，同时写入 Neo4j 知识图谱，形成结构化的长期记忆。下次对话开始前，这些记忆又会被检索出来注入上下文。
 
