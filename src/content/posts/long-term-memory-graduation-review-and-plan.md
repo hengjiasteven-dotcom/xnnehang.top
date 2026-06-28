@@ -45,7 +45,7 @@ X 为了能够放松自己，开始玩起了 ViTS 系列，入坑 BERT-VITS2， 
 
 大概在那之后不久，X 认识了 [SigureMo](https://github.com/SigureMo)，那大概算是 X 的老师，虽然没有主动教过什么，但是 X 大概花了两三个月时间完全把自己写代码的工作流变成对方的形状，ruff，pylint, pytest。以及对方审查代码的一个思路——为什么做，有没有更好的做法，是不是最小改动（有没有拖泥带水）。
 
-在 SigureMo 的引导下， X 也参与了一次 Paddle 的启航计划，在那里他第一次体会到了白盒子是什么感觉——神经网络调优是无法预知结果优劣的，但是深度学习框架的算子 bug_fix 或者额外类型支持，这些是可以预知结果的。那段时间他写代码写得真的很开心。也闹出过一些乌龙，比如 SigureMo 想让 X 去用 pre-commit 引入 typos，同时把这些简单的拼写修复 of review 都交给了 X，但是由于以前并没有 review 过代码，X 不知道 review 是要 submit 后才能被人看到，他给了很多的 pending review =-=，每次都没有人回复，X 一开始还很困惑，直到每次都要 SigureMo 来帮他收尾，他才发现原来他们看不见自己的 review。
+在 SigureMo 的引导下， X 也参与了一次 Paddle 的启航计划，在那里他第一次体会到了白盒子是什么感觉——神经网络调优是无法预知结果优劣的，但是深度学习框架的算子 bug_fix 或者额外类型支持，这些是可以预知结果的。那段时间他写代码写得真的很开心。也闹出过一些乌龙，比如 SigureMo 想让 X 去用 pre-commit 引入 typos，同时把这些简单的拼写修复的 review 都交给了 X，但是由于以前并没有 review 过代码，X 不知道 review 是要 submit 后才能被人看到，他给了很多的 pending review =-=，每次都没有人回复，X 一开始还很困惑，直到每次都要 SigureMo 来帮他收尾，他才发现原来他们看不见自己的 review。
 
 SigureMo 一直很照顾 X，而且给 X 一种找到同类的亲近感，但 X 应该让 SigureMo 很头疼。SigureMo 始终是 X 的开源启蒙导师。
 
