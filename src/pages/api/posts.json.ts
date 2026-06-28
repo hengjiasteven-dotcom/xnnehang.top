@@ -5,20 +5,30 @@ type Post = CollectionEntry<'posts'>
 const SITE_URL = 'https://xnnehang.top'
 const MAX_POSTS = 3
 
-// Convert a frontmatter-relative image path like "../../assets/img/covers/foo.jpg"
-// to an absolute GitHub raw URL so external consumers (e.g. profile README scripts)
-// can embed the image without needing the built site.
-const GITHUB_RAW_BASE =
+// src/assets/img/ is a git submodule pointing to MrXnneHang/image-hosting.
+// Raw content for that submodule must reference the submodule's own repo.
+const IMAGE_HOSTING_RAW_BASE =
+  'https://raw.githubusercontent.com/MrXnneHang/image-hosting/main'
+// All other src/ assets (if ever needed) live in the main blog repo.
+const BLOG_RAW_BASE =
   'https://raw.githubusercontent.com/MrXnneHang/xnnehang.top/main'
 
 function resolveImageUrl(image: string | undefined): string | null {
   if (!image) return null
-  // Already an absolute URL – return as-is
   if (image.startsWith('http://') || image.startsWith('https://')) return image
-  // Relative path from src/content/posts/ (e.g. "../../assets/img/covers/foo.jpg")
-  // Strip leading "../" sequences and prepend the src/ prefix
+
+  // Strip leading "../" to get path relative to src/
+  // e.g. "../../assets/img/covers/foo.jpg" → "assets/img/covers/foo.jpg"
   const stripped = image.replace(/^(\.\.\/)+/, '')
-  return `${GITHUB_RAW_BASE}/src/${stripped}`
+
+  // src/assets/img/** lives in the image-hosting submodule
+  if (stripped.startsWith('assets/img/')) {
+    const subPath = stripped.slice('assets/img/'.length) // e.g. "covers/foo.jpg"
+    return `${IMAGE_HOSTING_RAW_BASE}/${subPath}`
+  }
+
+  // Everything else: resolve against main blog repo
+  return `${BLOG_RAW_BASE}/src/${stripped}`
 }
 
 // Extract the first markdown image from post body as a cover fallback.
