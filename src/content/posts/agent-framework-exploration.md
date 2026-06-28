@@ -1,6 +1,7 @@
 ---
 title: 当主流 Agent 框架无法适配需求时，我们造了什么
 published: 2026-06-23
+featured: true
 category: 边写边学
 tags:
   - Agent

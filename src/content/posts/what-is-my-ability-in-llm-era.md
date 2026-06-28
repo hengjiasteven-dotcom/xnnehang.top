@@ -1,6 +1,7 @@
 ---
 title: 大模型时代：我的能力究竟是什么？
 published: 2026-06-12
+featured: true
 category: 思考
 tags:
   - LLM
