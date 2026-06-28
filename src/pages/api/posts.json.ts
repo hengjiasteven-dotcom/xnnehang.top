@@ -21,6 +21,15 @@ function resolveImageUrl(image: string | undefined): string | null {
   return `${GITHUB_RAW_BASE}/src/${stripped}`
 }
 
+// Extract the first markdown image from post body as a cover fallback.
+// Handles both "![alt](path)" and the Astro-specific "![alt](../../assets/...)" patterns.
+function extractFirstBodyImage(body: string | undefined): string | null {
+  if (!body) return null
+  const match = body.match(/!\[.*?\]\(([^)]+)\)/)
+  if (!match) return null
+  return resolveImageUrl(match[1].trim())
+}
+
 export async function GET() {
   const allPosts = await getCollection('posts', ({ data }: Post) => {
     return data.draft !== true && data.featured === true
@@ -32,13 +41,19 @@ export async function GET() {
       new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
   )
 
-  const posts = allPosts.slice(0, MAX_POSTS).map((post: Post) => ({
-    title: post.data.title,
-    description: post.data.description || '',
-    published: post.data.published.toISOString().slice(0, 10),
-    url: `${SITE_URL}/posts/${post.id}/`,
-    coverUrl: resolveImageUrl(post.data.image),
-  }))
+  const posts = allPosts.slice(0, MAX_POSTS).map((post: Post) => {
+    const coverUrl =
+      resolveImageUrl(post.data.image) ??
+      extractFirstBodyImage(post.body)
+
+    return {
+      title: post.data.title,
+      description: post.data.description || '',
+      published: post.data.published.toISOString().slice(0, 10),
+      url: `${SITE_URL}/posts/${post.id}/`,
+      coverUrl,
+    }
+  })
 
   return new Response(JSON.stringify(posts, null, 2), {
     headers: {
