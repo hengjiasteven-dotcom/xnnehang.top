@@ -77,3 +77,6 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 
 ## Astro Markdown Images
 When dealing with Astro markdown files, if an image file has spaces in its name (e.g., `Pasted image 123.png`), DO NOT rename the image file or URL encode it. Instead, use the standard Markdown angle bracket syntax to enclose the path: `![alt](<../../assets/img/Pasted image 123.png>)`. Astro requires this format to correctly resolve paths with spaces during the build process.
+
+## Markdown Heading Depths for TOC
+In markdown blog posts, the `h1` (`#`) is usually reserved for the post title (defined in frontmatter). All content headings MUST start from `h2` (`##`) and go down from there (`###`, `####`). If you use `#` for a section heading, it breaks the TOC (Table of Contents) generation by making the `minDepth` 1, which causes the TOC to filter out `h3` and `h4` headings. When debugging missing headings in the TOC, always check if the file incorrectly uses an `h1` (`#`) in the content.
