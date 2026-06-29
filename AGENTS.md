@@ -74,3 +74,6 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 - [ ] Run `vp install` after pulling remote changes and before getting started.
 - [ ] Run `vp check` and `vp test` to validate changes.
 <!--VITE PLUS END-->
+
+## Astro Markdown Images
+When dealing with Astro markdown files, if an image file has spaces in its name (e.g., `Pasted image 123.png`), DO NOT rename the image file or URL encode it. Instead, use the standard Markdown angle bracket syntax to enclose the path: `![alt](<../../assets/img/Pasted image 123.png>)`. Astro requires this format to correctly resolve paths with spaces during the build process.
