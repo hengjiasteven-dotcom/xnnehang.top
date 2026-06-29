@@ -5,6 +5,10 @@ import { WIKI_LINK_REGEX } from '../utils/wiki-regex.ts'
 
 let titleToSlug = null
 
+function normalizeQuotes(s) {
+  return s.replace(/[“”„‟]/g, '"').replace(/[‘’‚‛]/g, "'")
+}
+
 function buildTitleMap() {
   if (titleToSlug) return titleToSlug
   titleToSlug = new Map()
@@ -20,7 +24,7 @@ function buildTitleMap() {
     const match = content.match(/^title:\s*(.+)$/m)
     if (match) {
       const slug = file.replace(/\.md$/, '')
-      titleToSlug.set(match[1].trim().toLowerCase(), slug)
+      titleToSlug.set(normalizeQuotes(match[1].trim().toLowerCase()), slug)
     }
   }
   return titleToSlug
@@ -49,7 +53,7 @@ export function remarkWikiLinks() {
 
         const title = match[1].trim()
         const displayText = (match[2] || match[1]).trim()
-        const slug = map.get(title.toLowerCase())
+        const slug = map.get(normalizeQuotes(title.toLowerCase()))
 
         if (slug) {
           children.push({
