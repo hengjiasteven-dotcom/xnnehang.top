@@ -6,7 +6,7 @@ tags:
   - 凡人修仙传
   - 道德经
   - 思考
-description: 刷到一个讲和光同尘的视频，拿韩立举例子，看完愣了好久
+description: 从一个和光同尘的视频说起，聊韩立的道心、凡人修仙传的角色塑造、以及去我
 image: ../../assets/img/heguang-tongchen/cover.png
 shelf: '动漫'
 featured: true
