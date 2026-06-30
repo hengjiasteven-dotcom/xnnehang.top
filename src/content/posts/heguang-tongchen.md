@@ -13,7 +13,6 @@ featured: true
 series:
   - 观影
 ---
-![](../../assets/img/heguang-tongchen/cover.png)
 
 ## 君子在心
 
