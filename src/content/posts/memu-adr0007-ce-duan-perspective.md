@@ -11,6 +11,8 @@ tags:
 description: memU ADR0007 推翻了之前的 LLM mode，从 C 端产品开发者和情感陪伴场景聊我的看法
 featured: true
 image: ../../assets/img/memu-adr0007-ce-duan-perspective/cover.png
+series:
+  - Long-Term Memory
 ---
 ## 站在 C 端开发者的角度看 memU ADR0007
 
