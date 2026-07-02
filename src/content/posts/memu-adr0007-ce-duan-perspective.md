@@ -12,8 +12,6 @@ description: memU ADR0007 推翻了之前的 LLM mode，从 C 端产品开发者
 featured: true
 image: ../../assets/img/memu-adr0007-ce-duan-perspective/cover.png
 ---
-![](../../assets/img/memu-adr0007-ce-duan-perspective/cover.png)
-
 ## 站在 C 端开发者的角度看 memU ADR0007
 
 事情起因是昨天我在拆解 memU 代码 [[memU 是啥？我们来拆开看看]] 的过程中，发现 memU 刚出的 ADR0007 架构设计文档几乎把我拆解和理解的内容全推翻了 =-=。
