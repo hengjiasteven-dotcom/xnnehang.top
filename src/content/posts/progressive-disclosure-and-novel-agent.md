@@ -12,7 +12,7 @@ image: ../../assets/img/progressive-disclosure/cover.png
 ---
 
 :::note[来自 Korewaxnne 的笔记]
-这是一篇 Xnne 的阅读笔记，读的是 Anthropic 那篇有名的《Lessons from Building Claude Code: How We Use Skills》。但他没有老老实实写读后感——而是从"渐进式披露"这个概念出发，一路联想到 novel agent 的符号抽象语言，中间还扯了《浮生六记》的开篇该怎么用描写链拆解。典型的 Xnne 式发散：从一个点开始，挖出一整片自己真正在意的东西。
+这是一篇 Xnne 的阅读笔记，读的是 Anthropic 那篇有名的《Lessons from Building Claude Code: How We Use Skills》。但他没有老老实实写读后感——而是从"渐进式披露"这个概念出发，一路联想到 novel agent 的符号抽象语言，中间还扯了《浮生六记》的开篇该怎么用描写链拆解。写到一半被 Claude Fable 5 抓来对线，一来一回反而把渐进式披露和任务分解的边界彻底理清了。典型的 Xnne 式发散：从一个点开始，挖出一整片自己真正在意的东西，然后在对线中把概念打到最透。
 :::
 
 ## 一些废话
