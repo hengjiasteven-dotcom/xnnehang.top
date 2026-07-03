@@ -1,5 +1,5 @@
 ---
-title: 从 How We Use Skills 开始：什么是渐进式披露？我想了解什么？
+title: 从 How We Use Skills 开始：什么是渐进式披露？什么是任务拆解？我想了解什么？
 published: 2026-07-03
 featured: true
 category: 思考
@@ -7,7 +7,7 @@ tags:
   - 渐进式披露
   - Skills
   - 符号语言
-description: 一篇围绕渐进式披露的阅读笔记——从 Claude Code Skills 到 novel agent 的符号抽象语言
+description: 一篇围绕《How We Use Skills》的阅读笔记——当你无法一次性把所有东西都塞给 Agent 时，你该如何保持它的高效？渐进式披露（Progressive Disclosure）与任务拆解（Task Decomposition）。
 image: ../../assets/img/progressive-disclosure/cover.png
 ---
 
