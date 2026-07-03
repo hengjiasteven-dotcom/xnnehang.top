@@ -159,7 +159,7 @@ So novel Agent 任重道远。也许从一开始我建立复杂 skills 时就已
 
 对于一些个性化的库或者需求 Claude 会犯错，为这样的库定制 gotchas 是收益较高的。
 
-Openclaw 有时候让我很抓狂的一点，就是我一次次让它写入必坑，但是我根本就不记得为什么它总是重犯，是因为写入到了不知道哪个旮旯角去了，还是每次 session 刷新后，压根就没有重读它写过的 rule？
+Openclaw 有时候让我很抓狂的一点，就是我一次次让它写入避坑，但是我根本就不记得为什么它总是重犯，是因为写入到了不知道哪个旮旯角去了，还是每次 session 刷新后，压根就没有重读它写过的 rule？
 
 踩一个坑后补一条，但是，这个 gotchas 一定要能被召回呀。不然还是会犯错。
 
@@ -186,9 +186,9 @@ b.如果需要输出 markdown，采用填空式替代全量生成。允许复制
 
 ![一个 lib/signups.py 文件，包含 fetch、by_referrer、by_landing_page 等辅助函数，每个函数都在文档字符串中记录了坑点](../../assets/img/lessons-building-claude-code-how-we-use-skills/10-helper-functions.jpg)
 
-这点在网页端的 gpt 那边体现的淋漓尽致。让 gpt 直接编写或者修改 docx，它每次都会花十分钟以上来写一个很垃圾的基于 python 的 docx 的读取 and 修改脚本。然后把你的 docx 文档改得一塌糊涂。
+这点在网页端的 gpt 那边体现的淋漓尽致。让 gpt 直接编写或者修改 docx，它每次都会花十分钟以上来写一个很垃圾的基于 Python 的 docx 的读取 and 修改脚本。然后把你的 docx 文档改得一塌糊涂。
 
-而如果用 Cladue Desktop 的 cowork 状态，并且预装好一个 docx 的 skill，它的表现至少是快速且稳定的。它省去了每次编写 python 脚本的过程。
+而如果用 Cladue Desktop 的 cowork 状态，并且预装好一个 docx 的 skill，它的表现至少是快速且稳定的。它省去了每次编写 Python 脚本的过程。
 
 #### 7.skill 的是否应该互相依赖？
 
