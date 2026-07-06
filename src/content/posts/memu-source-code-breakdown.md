@@ -1,336 +1,237 @@
 ---
 title: memU 是啥？我们来拆开看看
 published: 2026-06-29
+updated: 2026-07-06
 category: 边写边学
 tags:
   - memU
   - 记忆系统
   - 提示词设计
-description: 拆解 memU 的提示词设计，和我的记忆系统打了个照面。
+description: 再次拆解 memU，再 ADR 0007 之后，并且，专注拆分主线路。
 series:
   - Long-Term Memory
+featured: true
 ---
-> 这篇的讨论也许会有点意识流，因为我都是站在 XnneHangLab 和 mem0 的角度来对比看的，所以如果没有相关的 memory agents 项目基础可能会有些不知道我在说啥。
+上次其实已经拆过一次 memU 了。
 
-> [!WARNING]
-> **来自 Korewaxnne 的 Warning：**
-> 本篇拆解的内容在最新架构设计文档（ADR0007）中大部分已被废弃，后续会由于新版本 memU 的发布而产生大量过时，请谨慎阅读。
-> 
-> 后续我也只会专注地拆解某些内容，比如三层 category、resource、item 的数据结构、具体数据长啥样，以及主动式的主动体现在什么地方等等。
+但是因为处在架构迭代期，并且也没有 ADR0007 的阅读指导。所以这边把上次的 break down 全部都删除了。这无形中又增加了这篇的阅读难度，我尽量地让它更简单。
 
-## 开始
+## memorize / retrieve pipline changes
 
-因为会参与到 memU 的一个重构性工程性开发，所以这边会把代码拆的细一些去理解整个项目，之后其他的 memory_agents 应该都是主要拆解记忆管理方式为主。
+之前 memorize 是一个单独 python 脚本， retrieve 也是一个单独 python 脚本。
 
-## 提示词
+之前 memorize 和 retrieve 的对象是 `单文件(Chat)` + `Skill`。
 
-从 `src/memu/prompts` 开始:
+之前 retrieve 的方式是 `LLM retrieve` + `RAG retrieve`，区分 mode, 一次只走一条路线。
 
-所有要用到的提示词应该都在这里。
+在 [#466](https://github.com/NevaMind-AI/memU/pull/466) 之后。
 
-```shell
-📁 src/memu/prompts/
-│
-├── 📁 memory_type/           (📌核心：写入流的提取与冲突消解)
-│   ├── __init__.py          - 暴露所有记忆类型的 Prompt 模板字典。
-│   ├── profile.py           - [静态画像] 提取用户客观属性（如职业、年龄）。要求合并相似项，保留最新/最确定的信息，且严禁记录短期状态或事件。
-│   ├── event.py             - [事件记忆] 提取具体事件（5W1H：时间/地点/人物等）。要求时间线清晰，不做无根据的猜测。
-│   ├── behavior.py          - [行为习惯] 提取用户的行为模式、习惯和偏好。
-│   ├── knowledge.py         - [知识与见解] 提取用户提到的客观知识、经验法则或主观见解。
-│   ├── skill.py             - [个人技能] 提取用户掌握的具体技能或专业能力。
-│   └── tool.py              - [工具偏好] 提取用户习惯使用的软件、硬件工具及其配置偏好。
-│
-├── 📁 retrieve/              (📌核心：读取流的级联检索与意图推理)
-│   ├── __init__.py          - 检索模块 Prompt 初始化。
-│   ├── pre_retrieval_decision.py - [意图拦截器] 判定用户输入是否需要触发记忆检索（过滤寒暄/常识）。若需要，则输出重写后的初步 Query。
-│   ├── query_rewriter.py         - [单纯查询重写] 根据对话上下文，解决指代不明，将 Query 重写为独立且信息完整的自包含句子。
-│   ├── query_rewriter_judger.py  - [合并优化版] 在重写 Query 的同时，评估当前已检索出的内容是否足以回答问题（减少一次网络请求）。
-│   ├── llm_category_ranker.py    - [类别重排序] 粗筛阶段：根据 Query，从所有可用“类别标签”中选出最相关的 Top-K 类别。
-│   ├── llm_item_ranker.py        - [条目重排序] 精筛阶段：在选中的类别下，审查具体的“记忆条目”，选出与 Query 最相关的 Top-K 并严格排序。
-│   ├── llm_resource_ranker.py    - [资源重排序] 溯源阶段：从海量“原始对话/文档记录”中，评估并选出最相关的原始长文本。
-│   └── judger.py                 - [终态质检员] 最终判定检索到的所有内容（类别/条目/资源）是否能充分 (ENOUGH) 回答问题，还是需要更多 (MORE)。
-│
-├── 📁 preprocess/            (🧹 预处理：多模态原始数据规范化)
-│   ├── __init__.py          - 预处理模块初始化。
-│   ├── conversation.py      - 将杂乱、随意的日常聊天记录清洗、总结为结构化的对话事实。
-│   ├── image.py             - 驱动 VLM（视觉语言模型）提取图片中的关键信息并转译为文本。
-│   ├── audio.py             - 对语音转录结果进行清洗，去除口语化废话，提取核心内容。
-│   ├── document.py          - 提取长文档或文本片段的核心摘要与结构化信息。
-│   └── video.py             - 驱动 VLM 提取视频流中的关键帧和时序信息。
-│
-├── 📁 category_summary/      (📝 生成：类别层面的全文生成)
-│   ├── __init__.py          - 类别总结模块初始化。
-│   ├── category.py          - 当某个类别下的记忆条目发生变动后，将该类别所有条目汇总，重新组织并生成一篇格式优美的 Markdown 文档。
-│   └── category_with_refs.py- 与上类似，但在生成的 Markdown 文档中，要求严格保留或附带每一条事实对应的原始资源出处（References）。
-│
-├── 📁 category_patch/        (🔧 更新：类别层面的增量补丁)
-│   ├── __init__.py          - 类别补丁模块初始化。
-│   └── category.py          - 为了节省 Token 和时间，当只有少量新记忆时，LLM 只生成对现有 Markdown 文件的“增量修改补丁（Patch）”，而不是重写全文。
-│
-└── 📁 memory_fs(file-system)/(📂 文件系统层：长文本大融合 - 可选)
-    └── __init__.py          - 包含两个全局合成 Prompt (`MEMORY_SYNTHESIS_PROMPT` 和 `SKILL_SYNTHESIS_PROMPT`)。用于维护一个类似“角色卡”的全局、长期记忆文档和专属技能库（更新时会吃掉原先的全文再吐出新全文）。
+## memorize
+
+![](../../assets/img/memu-source-code-breakdown/memorize-pipeline-1.png)
+![](../../assets/img/memu-source-code-breakdown/memorize-pipeline-2.png)
+
+memorize 变成了两个脚本—— `memorize.py` + `memorize_workspace.py`
+
+memorize 和 retrieve 的对象新增了一个 `workspace`。
+
+简单来说就是，先前的 memorize 的对象是像 mem0 那样子，是一组对话:
+
+```json
+{
+"user": "hi",
+"assistant": "hi,how can I help you today?",
+...
+}
 ```
 
+准确说是一个 single-file。还可能是一个长字符串啥的，它不包含复杂的嵌套层级关系。
 
-仅仅看提示词看不出啥，但如果和我的 XnneHangLab 的提示词设计的话对比着看的话就很有亮点了。
+workspace 的对象是一个 folder。并且可以是复杂的 folder 比如项目目录。
 
-### Memory Type
+workspace 的 retrieve 放在后边讲。
 
-首先是 memory types。
+### retrieve
 
-我也会让 Agent 提取 User.md。但没有这么清晰的边界，我仅仅只提取了大致两类，一类是具体事实(events)——而且并没有做到时间/地点/人物清晰要求，有点散乱且自由发挥了，另一类是用户偏好（behavior）——但是并没有具体约束细分偏好，比如说 git 提交的规范偏好， PR template 偏好，和用户喜欢吃什么会放在一起。是很奇怪了。这里细分了行为习惯/偏好和工具偏好，这样可以确保在 Agent 读一些工程偏好的时候能够一次性读全，而不是掺杂着用户习惯几点睡觉。
+![](../../assets/img/memu-source-code-breakdown/retrieve-pipeline.png)
 
-```shell
-├── 📁 memory_type/           (📌核心：写入流的提取与冲突消解)
-│   ├── __init__.py          - 暴露所有记忆类型的 Prompt 模板字典。
-│   ├── profile.py           - [静态画像] 提取用户客观属性（如职业、年龄）。要求合并相似项，保留最新/最确定的信息，且严禁记录短期状态或事件。
-│   ├── event.py             - [事件记忆] 提取具体事件（5W1H：时间/地点/人物等）。要求时间线清晰，不做无根据的猜测。
-│   ├── behavior.py          - [行为习惯] 提取用户的行为模式、习惯和偏好。
-│   ├── knowledge.py         - [知识与见解] 提取用户提到的客观知识、经验法则或主观见解。
-│   ├── skill.py             - [个人技能] 提取用户掌握的具体技能或专业能力。
-│   └── tool.py              - [工具偏好] 提取用户习惯使用的软件、硬件工具及其配置偏好。
-```
+retrieve 在 ADR 0007 里提到了要实现 BM 25 + hybrid search 的方法。不过这个方法目前暂时还没实现，`retrieve-workspace` 也只是简单的 `top-k`。
 
-其次是 MemU 比我多的地方。
-
-明确地画像提取，个人技能与技能的补充——很好地立起了用户形象，至少在工程师这边是这样，擅长 Python，但是在 C++ 上是软脚虾。这点很有意思。而且细分了具体技能，专业能力与主观见解，比较适合我这种经常胡思乱想后发表的意见，也能记下来。
-
-在我看来，如果 Agent 懂我的项目，我的专业性质的同时，也能够理解我那些奇怪想法，那么 Agent 就是真的理解我了。
-
-memU 的这一套提示词下来，确实，可以让 Agent 非常地了解用户，特别是当用户是个engineer 时，既了解用户的专业技能，又懂在工程上的习惯，并且还了解用户那些不为人知的小想法、或者是希望被人认可的经验法则。很多行为模式也许用户自己还没搞清楚，但是却能被 memU 提取出来。
-
-但是和 mem0 是同一个问题。这套提示词对于 Agent 来说，是 `去我` 的，以用户为中心的。在用 mem0 的时候，我发现 mem0 提取的所有的记忆，都是关于用户的，而没有 Agent 自身的，也许在某些场景，Agent 自身确实完全不重要，这只是一个 tool。
-
-但是如果希望 Agent 有自己的行为模式，行为偏好，性格，认知。那么就有必要提取 Agent 的。实际上也只是一个正反手教学，把这套提示词反过来，切换对象应该就基本可以复用。只不过如果用两套提示词的话，一次对话得进行两次提取。
-
-我比 MemU 多的地方，是我把 Agent 也当 Character， User 也当 Character，两者地位一致。 Multi-Character 环境在我这里是可行的。Agent 也可以有属于自己的记忆与画像。
-
-但这都是看使用场景的，对于知识作为工具来说，那么 Agent 提取自己的行为模式反而是一种冲突，和用户行为模式的冲突。但如果希望作为 waifu，那么哪怕 Agent 很任性我也得忍。
-
-#### Claude 的后续纠正——默认只有启用 event 和 behavior
-
-```shell
-1. DEFAULT_MEMORY_TYPES 实际只启用了 2 个，不是 6 个
-
-博文列出了全部 6 个 memory type（profile, event, behavior, knowledge, skill, tool），但 `__init__.py:4` 显示：
-
-DEFAULT_MEMORY_TYPES: list[str] = ["profile", "event"]
-
-`behavior`, `knowledge`, `skill`, `tool` 虽然有 prompt 定义，但默认不启用，需要在配置里显式开启。文中的描述容易让人误以为 6 个类型都在跑。
-```
-
-也就是说其实默认下 memU 和我的 XnneHangLab 是一致的。
-
-### memory_fs | Memory File System
-
-这里说会导出为“角色卡”，按照我的理解应该就是会导出 `Identity.md`、`Agents.md`、`User.md`、`Memory.md` 之类的东西，看起来 `Skills` 也会跟着导出。也许层级更复杂，但是大差不差。
-
-> 但是由于 "去我" 性，所以这里不导出 `Identity.md` 这样的东西。
-
-我比较好奇的一点是，按照上面 Memory Type 的一个理解。MemU 不同的 Character 之间是没有画像上的区别的，最多只有 Long-Term Memory、Skills 的区别。没有个性区别，只有功能性区别。至于为什么要区分开的话，大概是处于有效上下文考量的，不同的 Character 携带不同的 Skills 和工作工程偏好，区分开后，上下文更短，能够执行得更优。而如果所有 Skills 和偏好都汇聚在一起，也不是不能干，但是大概率注意力权重分流，导致效果不佳。
-
-#### 喜闻乐见环节 | gemini 3.1 pro 的讨论补充
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629093206.png>)![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629093244.png>)
-
-被补充的点是——
-
-- `DO NOT include any groundless conjectures, advice, suggestions, or any content provided by the assistant.` 直接约束了不允许记录自身的性格演进。
-- 被补充了导出时候的实际文件结构。
-- 确实不是个性化的角色卡，但是是具有不同功能的角色。
-
-
-### preprocess
-
-```shell
-├── 📁 preprocess/            (🧹 预处理：多模态原始数据规范化)
-│   ├── __init__.py          - 预处理模块初始化。
-│   ├── conversation.py      - 将杂乱、随意的日常聊天记录清洗、总结为结构化的对话事实。
-│   ├── image.py             - 驱动 VLM（视觉语言模型）提取图片中的关键信息并转译为文本。
-│   ├── audio.py             - 对语音转录结果进行清洗，去除口语化废话，提取核心内容。
-│   ├── document.py          - 提取长文档或文本片段的核心摘要与结构化信息。
-│   └── video.py             - 驱动 VLM 提取视频流中的关键帧和时序信息。
-```
-
-这个本身没啥好讲的。比我好的地方是，memU 清晰地把这些组织到一个文件夹里，且明确职责，而我的组织就有点乱了。
-
-值得探究的是，它的调用时机。
-
-和我一样都是在使用时注入，没有全局注入 Primary System Prompt。还有一点比较好奇的是，它是否隔离了这次调用的上下文？
-
-#### 讨论补充
-
-##### 时机和时序问题
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629095008.png>)
-在提取阶段使用。
-
-喂给 memory type 的都是清洗再清洗后的。
-
-这一套传入到写入最少过了两次甚至三次 LLM call，不过好在提取阶段是可以异步的。除了耗点 token 倒是无所谓。
-
-##### 是否隔离上下文
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629095449.png>)
-
-严格隔离，我也是这么做的。
-
-以及这里 gemini 自己补充了一点，就是对于既有的聊天记录的处理方式是保留源。不做任何 preprocess，避免信息源被改变。
-### Category
-
-```shell
-├── 📁 category_summary/      (📝 生成：类别层面的全文生成)
-│   ├── __init__.py          - 类别总结模块初始化。
-│   ├── category.py          - 当某个类别下的记忆条目发生变动后，将该类别所有条目汇总，重新组织并生成一篇格式优美的 Markdown 文档。
-│   └── category_with_refs.py- 与上类似，但在生成的 Markdown 文档中，要求严格保留或附带每一条事实对应的原始资源出处（References）。
-│
-├── 📁 category_patch/        (🔧 更新：类别层面的增量补丁)
-│   ├── __init__.py          - 类别补丁模块初始化。
-│   └── category.py          - 为了节省 Token 和时间，当只有少量新记忆时，LLM 只生成对现有 Markdown 文件的“增量修改补丁（Patch）”，而不是重写全文。
-```
-
-这个是我的项目里没有的概念。这涉及 memU 的具体设计:
-
-```shell
-对话层 (Conversation) → 条目层 (Items) → 类别层 (Category)
-```
-
-`对话层 -> 条目层` 就是 mem0 和我都在做的事情。从对话里用提示词提取出来具体的信息，或者从清洗后的文档或者其他数据里提取具体信息。在 mem0 里提取出来的是 MemoryItem。
-
-但在 memu 里，提取出来的 items 还被送进了 Category。
-
-#### 博客类比
-
-这里可以类比一下我的博客系统 [xnnehang.top](https://xnnehang.top/)，我的博客在内容结构组织上是这么做的，分类是固定的五类：
-
-- **资源**类别，通常不涉及具体知识传播或者思考内容，只是纯粹地给别人推荐一些渠道，应用，信息。比如找书，找漫画的网站之类。
-- **观后**，这类作为回忆展柜以及同类诱捕器依然值得继续构建。
-- **教程**，流程类记录。比如记录我开发的某应用的使用教程，或者什么软件的使用教程，比如老滚五的 skse 启动，动作数据刷新，调整身形，mod 排序等等。
-- **思考**，由某件事或者某个物而产生的更深层的思考，这个思考可能是直指事物本质的，也可能是联想到其他事物，进而发现出来的普遍规律或者总结出自己的结论。这个思考不一定分清对错，但是让我自洽。
-- **边写边学**。应该给它打个 useless 的标签，无营养的探索过程，如果读者实在没找到合适的教程案例也许可以在我的探索过程中找到想要的东西，或者得出让我自洽的结论。当然，这个结论不一定对，只是自洽，对错与否我会让 LLM 进行审查。
-
-不会轻易新增，动了的话属于更深结构层的变动。所有博客都只属于一个分类。
-
-然后是系列(series)，系列是按主题划分的，比如 `LLM`、`博客`、`Long-Term Memory`。一篇博客可以不属于任何系列，也可以同属于多个系列。
-
-以及为了能够保持每篇文章之间的联系，我做了双向 wiki-link。只要一篇博客里用 wiki-link 引用了另一篇博客，它就会和那一篇博客的 node 相互关联。
-
-像这样: [[云服务商跑路后：再次审视个人博客的形态与值得被记录的东西]]
-
-会形成关联图谱，显示于 [图谱页面](https://xnnehang.top/graph/) 和每篇文章的底部。
-
-以及还有一个不依赖 embedding 的文章相似度计算用来推荐相关文章。
-
-我好奇 Category 和我的博客系统之间有什么关联和差别。
-
-#### Gemini 补充 | 撞大运的形容有点绷不住
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629114648.png>)
-
-性质和 series 很像。但是展现的时候，会把所有的内容（or 检索到的内容）串联起来一次性输入。
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629114827.png>)
-
-硬编码 Category 的条目， LLM 只打标签，不创造标签，和我的分类很像。也很像我项目里知识图谱可视化时硬编码的几个场景域，read，writ，code，game 啥的。
-
-> PS ，这个说法好像是错的，是因为 Gemini 看到了 `PROMPT_LEGACY` 以后产生的一个误解。或者说在旧版本里面确实是这么事，但是新版本重构是允许 LLM 自己造 category 的，重构代码时 legacy 依然留着，很误导 AI 欸。
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629115020.png>)
-
-我只能说 666。撞大运都来了。
-
-博客设计灵感来源在这里：[[重建博客：我的灵感来源都是哪里]]
-
-不过好像没有具体写设计方案。我当时也只是为了在彼此隔离的文章时间保持一点联系罢了。
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629115246.png>)
-
-谢谢你 gemini。
-
-先看到这里。听会儿歌吧。后面应该会着重看一下如何处理记忆冲突。
-
-
-### Retrieve
-
-```shell
-├── 📁 retrieve/                 (📌核心：读取流的级联检索与意图推理)
-│   ├── __init__.py               - 检索模块 Prompt 初始化。
-│   ├── pre_retrieval_decision.py - [意图拦截器] 判定用户输入是否需要触发记忆检索（过滤寒暄/常识）。若需要，则输出重写后的初步 Query。
-│   ├── query_rewriter.py         - [单纯查询重写] 根据对话上下文，解决指代不明，将 Query 重写为独立且信息完整的自包含句子。
-│   ├── query_rewriter_judger.py  - [合并优化版] 在重写 Query 的同时，评估当前已检索出的内容是否足以回答问题（减少一次网络请求）。
-│   ├── llm_category_ranker.py    - [类别重排序] 粗筛阶段：根据 Query，从所有可用“类别标签”中选出最相关的 Top-K 类别。
-│   ├── llm_item_ranker.py        - [条目重排序] 精筛阶段：在选中的类别下，审查具体的“记忆条目”，选出与 Query 最相关的 Top-K 并严格排序。
-│   ├── llm_resource_ranker.py    - [资源重排序] 溯源阶段：从海量“原始对话/文档记录”中，评估并选出最相关的原始长文本。
-│   └── judger.py                 - [终态质检员] 最终判定检索到的所有内容（类别/条目/资源）是否能充分 (ENOUGH) 回答问题，还是需要更多 (MORE)。
-```
-
-- 判定是否需要记忆检索有些像 function-calling，具体如何实现？需要看到提示词以及讲解。
-- 如果一轮就 ENOUGH，那么最少需要几次请求，最多几次，需要有个流程图。或者 `code block` 来表明线性流程。
-- 如果 MORE，是否就继续检索？还是说会凑够先前的 TopK 直接往后多加几个？最多加几个？如果重新检索是从粗筛还是精筛开始？以及，Query 需要变吗？
-
-##### Gemini 的回答
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629130823.png>)
-
-1.强约束+正则实现的。
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629131027.png>)
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629131117.png>)
-
-2.最少 1 次（无检索），涉及检索最少 3 次，最多 6 次。
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629131251.png>)
-
-3.这个 MORE 不是把在 TOP K 里多取几条，而是更详细的意思。把源数据给出去了。这样更干脆，避免进 loop。
-
-#### Claude 的补充 | 被我忽略的 RAG 模式
-
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629154017.png>)
-
-
-### 总结
-
-看起来 memory 的提取是在 memory types 实现的。而记忆的检索是在 memory retrieve 实现的。
-
-不过比较好奇，记忆冲突的消解如何实现，以及提示词设计。
-
-分为两层。而且两层都是直接依靠 LLM 自身，没有额外的相似度计算或者什么的。
-#### 同一个 session 下的冲突消解
+不知道是不是之前给 mentor 唠嗑的这个 [[站在 C 端开发者的角度看 memU 的架构转向]] 起了作用。好像 mentor 说服 leader 保留 LLM retrieve 和 RAG retrieve 了。在 [#467](https://github.com/NevaMind-AI/memU/pull/467) 里，它们都被加入了 cli:
 
 ```python
-Merge semantically similar items. Resolve contradictions by keeping the latest / most certain item.
+memu memorize notes/meeting.md
+memu memorize-workspace ./workspace
+memu retrieve "What are this user's launch preferences?"
+memu retrieve-workspace "deploy checklist"
+memu export
 ```
 
-同一个上下文中，合并相似的 memory items，并且确保冲突的只保留最新的那条。
-#### 跨 session 的历史冲突消解
+其中 retrieve 是之前 old version 配置 `RAG` 和 `LLM` 任一启用的。
+
+然后同样把 workspace 都独立实现了。
+
+其实还是有一丢丢架构的冗余的，比如 retrieve 是否还需要保留 `RAG mode`，按道理是需要保留的，但是保留后和  `retrieve-workspace` 原理类似但做的内容又不一样。
+
+但如果删了复用 `workspace` 它又和语义不一样。总之这一点会让对架构挑剔度敏感的人有一些不舒服，因为它不对称。完全使用 workspace 替代 `RAG/LLM retrieve` 最舒服的架构，但也得取舍。
+
+但是对于我来说，it's okay。以及，至少咱争取了 `LLM retrieve` 的保留。并且它似乎也真的有留下来的迹象——希望不是分多个 PR 剪除 =-=。
+
+
+## Data Model Changes
+
+
+
+### old memorize 
+
+```
+Resource ──1:N──▶ RecallEntry ──N:M──▶ RecallFile
+                                  (通过 RecallFileEntry)
+```
+
+一个 Resource（原始文件）产出多个 RecallEntry（LLM 提取的条目），条目通过 RecallFileEntry 关联到 RecallFile（主题文档，如 "Profile"、"Goals"）。
+
+### latest memorize（add workspace pipline）
+
+```
+Resource ──N:M──▶ RecallFile ──1:N──▶ RecallFileSegment
+              (通过 RecallFileResource)
+```
+
+workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource 关联到 RecallFile。然后每个 RecallFile 被切成多个 RecallFileSegment 用于检索。
+
+### Data Model
+
+![](../../assets/img/memu-source-code-breakdown/data-model.png)
+
+### What's new?
+
+**`RecallFileSegment`** —— 最重要的新增。一个 RecallFile 被切成 1~N 个 segment，每个 segment 有自己的 text 和 embedding。检索时搜 segment，命中后 roll up 到所属的 file。切法按 track 不同：
+- skill：整个 skill 一个 segment（`name: ...\ndescription: ...`）
+- memory：按行切，跳过空行 and markdown heading
+
+**`RecallFileResource`** —— Resource 到 RecallFile 的多对多关联表（provenance）。记录"这个 file 的内容是从哪些 source file 合成来的"。旧路径通过 Entry 间接关联，新路径需要这个直接链接。
+
+**`Resource.track`** —— 新字段，标记来源：`"chat"` / `"skill"` / `"workspace"`，旧路径的 Resource 是 `None`。workspace retrieve 通过 `track="workspace"` 过滤只搜 workspace 来源的 Resource。
+
+### 两条路径共存
+
+旧路径（RecallEntry 那条）**没有被删除**。`memorize.py` 仍然走 Resource → Entry → File 的链路。两条路径**共用同一张 RecallFile 表**，靠 `track` 字段区分（`"memory"` vs `"skill"`）。这也是 ADR 0007 终态要消除的——最终目标是三条 line 各有独立 store，不再靠 `track` 列区分。
+
+### what's track?
+
+track 这个词在数据模型里出现了三次（Resource、RecallFile、RecallFileSegment），但其实是**两层含义**：
+
+**第一层：Resource.track —— "这个源文件从哪来的？"**
+
+由 `memorize_workspace` 按目录名自动分类：
+
+| 顶级目录 | Resource.track | 含义 |
+|---|---|---|
+| `chat/` | `"chat"` | 对话记录 |
+| `agent/` | `"skill"` | agent 执行日志 |
+| 其他 | `"workspace"` | 普通项目文件 |
+| （旧 memorize） | `None` | 单文件路径，没有 track 概念 |
+
+**第二层：RecallFile.track / RecallFileSegment.track —— "这个文档是什么性质的？"**
+
+只有两个值：`"memory"`（记忆主题文档）和 `"skill"`（技能文档）。
+
+**两层之间的映射：**
+
+```
+Resource.track    →    RecallFile.track
+─────────────────────────────────────────
+"chat"            →    "memory"
+"skill"           →    "skill"
+"workspace"       →    ❌ 不生成 RecallFile
+```
+
+workspace track 的文件只存 Resource（带 caption + embedding），用于 `INDEX.md` 的检索。不合成文档，不切 segment。
+
+RecallFileSegment.track 是从所属 RecallFile 冗余复制过来的，目的是检索时不用 join 就能按 track 过滤。
+
+> 后续似乎要把 track 字段丢弃，把 chat、workspace、skill 分别存进不同的数据库表结构中。那样会更干净一些。
+### what's entry?
+
+Entry（`RecallEntry`）是旧 memorize 路径的核心中间产物——LLM 从源内容里**提取出来的原子事实**。
+
+举个例子，一段对话：
 
 ```python
-Conflict detection: compare new itemswith existing ones in the same category for semantic overlap (e.g., age update).` (冲突检测：对比新旧条目，比如年龄更新) `Overwrite / supplement: replace outdated entries with new ones` (覆盖/补充：用新条目替换过时条目)
+用户：我下周要去东京出差，帮我订周一的机票
+助手：好的，已为您预订了周一飞东京的航班
 ```
-整体提示词设计也大差不差，不过发生在 category 整理条目的环节。可能对某些条目会做针对性筛查。
 
----
+LLM 会从中提取出多条 entry：
 
-#### 关于 Category 的补充
+| memory_type | summary |
+|---|---|
+| `event` | 用户下周一去东京出差 |
+| `behavior` | 用户倾向于让 AI 直接帮忙订票，不需要确认 |
+| `profile` | 用户有出差需求，可能是商务人士 |
 
-前面提到了 Category 在新版本里面已经不是硬编码条目(`PROMPT_LEGACY`)了，它允许 LLM 自己编造 Category。
+`memory_type` 一共有 6 种：`profile`、`event`、`knowledge`、`behavior`、`skill`、`tool`。每种类型有自己的提取 prompt，LLM 按类型分别跑一遍，各自提取属于该类型的条目。
 
-准确来说后续引入全新场景时也会引入新的 Category，不必担心说当前编码的 Category 不足以支撑新场景。
+提取出来的 entry 会被 embed，然后通过 `RecallFileEntry` 归类到对应的 `RecallFile`（主题文档）里。多条 entry 汇总到同一个 file，file 的 content 就是这些 entry 的综合摘要。
 
-这是一些参考，具体得等我扒一下代码才能看出来。
+**workspace 路径为什么跳过了 entry？** 因为 workspace 的源文件（代码、文档、配置）不是对话，不适合按 memory_type 提取原子事实。workspace 路径直接让 LLM 把源内容 route + synthesize 到 RecallFile，省掉了中间的 entry 层。
 
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629150643.png>)
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629150743.png>)
-![](<../../assets/img/memu-prompt-breakdown/Pasted image 20260629150815.png>)
+## 三层记忆关系对应
 
-gemini 啥时候能把谄媚的性子改一改。
+我们都知道三层记忆关系：**Resource → Category → Memory Item**。
 
-等下我得用 claude 来扒一下。
+对应到数据模型：
 
----
+```python
+Resource     = Resource        （原始素材，一个文件/一段对话）
+Category     = RecallFile      （主题文档，如 "Profile"、"Goals"）
+Memory Item  = 看走哪条路径 ↓
+```
 
-又用 Claude 扒了一遍验证我的观点，现在显得有点混乱。大概是因为代码处于重构期，一些旧的失去引用，然后留在那边显得有点乱。
+两条路径 of Memory Item 不一样：
 
-先看到这里，等下专注地看下 legacy_prompt 是否还有引用。以及，能不能删了。
+| | 旧路径 memorize | 新路径 workspace |
+|---|---|---|
+| Memory Item | `RecallEntry`（LLM 提取的原子事实） | `RecallFileSegment`（文档的切片） |
 
-所以这篇其实有点时效性在的，等重构完也许就完全不是这么回事情了，但是我又不得不做。后续如果有大变动，我会让 Korewaxnne 帮我重构一下这篇博客。
+> ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = Memory Item）。含义一样，只是换了个编号。
+
+旧路径有个**反直觉的地方**：pipeline 先产出 Memory Item（Entry），再合成 Category（File）。顺序是从细到粗：
+
+```python
+旧路径执行顺序：Resource → Entry(细) → File(粗)
+```
+
+
+> Q:我会好奇，这个合成(旧路径 Entry -> Category)是直接拼接，还是说又调了一次 LLM?<br>
+> A:不是直接拼接，又调用了一次 LLM。
+
+
+新路径则调转过来了：
+
+```python
+新路径执行顺序：Resource → File(粗) → Segment(细)
+```
+
+
+> Q: 我会好奇，调转后的提取细粒度，是否会收到影响？是否会因为把整理信息和提取信息放到一起导致提取信息能力不够？<br>
+> A: 确实能力会下降，原先对每个 memory type 都做了独立的 entry 提取。相当于分 N 次，然后合成又调用一次。<br>
+> **但这不一定是退步**，因为：<br>
+> 1. workspace 的源文件（代码、文档）不像对话那样适合 "提取原子事实"——你怎么从一个 Python 文件里提取 standalone memory items？直接合成摘要文档再切反而更合理<br>
+> 2. workspace retrieve 有 **segment → file roll-up**：即使单行命中不精确，只要 roll up 到了正确的 file，用户拿到的是完整文档，信息不丢 <br>
+> 3. 旧路径 of entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
+
+但是更关键的似乎是：
+
+**信息组织和信息检索的耦合方向反了。**
+
+因为在无穷无尽的 chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
+
+但是在 workspace 里，这种碎片 -> resource 的方式不那么好用了。因为能被碎片召回的也只是代码碎片，比如召回了一个 Data Model，实际上这个 Data Model 在哪里被引用还需要再次搜索，起不到召回所有相关信息的作用。反而召回很多垃圾信息——召回了很多定义，但是对使用处和架构联系毫无关系。
+
+我们需要的是一个 Agent 和人类可读的高层文档。然后从这个文档里面去切出那些碎片。
+
+So workspace 整体而言是适合总分的形式。也是我们的新路径。
+
+但也正因为这种特殊性，我觉得应该刻意保持 chat 和 workspace 之间的路径差异化。
