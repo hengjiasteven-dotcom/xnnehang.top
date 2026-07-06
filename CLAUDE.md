@@ -30,6 +30,15 @@ nyakku.moe/
   2. 先进入 submodule 目录，`git status` 确认有实际改动再 commit + push
   3. 在主仓库 stage submodule 变更，commit + push
 - 注意：`nyakku.moe` 和 `obsidan/xnnehang.top.factory` 挂载的是同一个 image-hosting 仓库，submodule 的改动只需在一方提交推送即可，另一方下次 `git submodule update` 后自动同步
+- **Astro 本地图片 HTML 标签限制与解决方法**：
+  Astro 的 markdown 编译器无法解析 HTML `<img>` 标签中的本地相对路径。如需居中或限制图片宽度，**禁止使用 HTML `<img>` 标签**，应通过如下方式包裹标准 Markdown 图片（在前后各保留一个空行）：
+  ```html
+  <div class="img-center" style="max-width: 24rem; margin: 0 auto;">
+
+  ![alt](../../assets/img/filename.png)
+
+  </div>
+  ```
 
 ## 博客发布工作流
 
