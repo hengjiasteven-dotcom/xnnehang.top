@@ -32,7 +32,7 @@ featured: true
 
 在 [#466](https://github.com/NevaMind-AI/memU/pull/466) 之后。
 
-## memorize
+### memorize
 
 ![](../../assets/img/memu-source-code-breakdown/memorize-pipeline-1.png)
 ![](../../assets/img/memu-source-code-breakdown/memorize-pipeline-2.png)
@@ -112,13 +112,13 @@ workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource
 
 ### What's new?
 
-**`RecallFileSegment`** —— 最重要的新增。一个 RecallFile 被切成 1~N 个 segment，每个 segment 有自己的 text 和 embedding。检索时搜 segment，命中后 roll up 到所属的 file。切法按 track classification：
+**`RecallFileSegment`** —— 最重要的新增。一个 RecallFile 被切成 1~N 个 segment，每个 segment 有自己的 text 和 embedding。检索时搜 segment，命中后 roll up 到所属的 file。切法按 track 不同：
 - skill：整个 skill 一个 segment（`name: ...\ndescription: ...`）
 - memory：按行切，跳过空行和 markdown heading
 
 **`RecallFileResource`** —— Resource 到 RecallFile 的多对多关联表（provenance）。记录"这个 file 的内容是从哪些 source file 合成来的"。旧路径通过 Entry 间接关联，新路径需要这个直接链接。
 
-**`Resource.track`** —— 新字段，标记来源：`"chat"` / `"skill"` / `"workspace"`，旧路径的 Resource 是 `None`。workspace retrieve 通过 `track="workspace"` 过滤只搜 workspace 来源的 Resource。
+**`Resource.track`** —— 新字段，标记来源：`"chat"` / `"skill"` / `"workspace"`，旧路径的 Resource 是 `None`。workspace retrieve 通过 `track="workspace"` 过滤只搜 workspace 来源 of Resource。
 
 ### 两条路径共存
 
@@ -181,7 +181,7 @@ LLM 会从中提取出多条 entry：
 
 `memory_type` 一共有 6 种：`profile`、`event`、`knowledge`、`behavior`、`skill`、`tool`。每种类型有自己的提取 prompt，LLM 按类型分别跑一遍，各自提取属于该类型的条目。
 
-提取出来的 entry 会被 embed，然后通过 `RecallFileEntry` 归类到对应的 `RecallFile`（主题文档）里。多条 entry 汇总到同一个 file，file 的 content 就是 these entry 的综合摘要。
+提取出来的 entry 会被 embed，然后通过 `RecallFileEntry` 归类到对应的 `RecallFile`（主题文档）里。多条 entry 汇总到同一个 file，file 的 content 就是这些 entry 的综合摘要。
 
 **workspace 路径为什么跳过了 entry？** 因为 workspace 的源文件（代码、文档、配置）不是对话，不适合按 memory_type 提取原子事实。workspace 路径直接让 LLM 把源内容 route + synthesize 到 RecallFile，省掉了中间的 entry 层。
 
@@ -197,7 +197,7 @@ Category     = RecallFile      （主题文档，如 "Profile"、"Goals"）
 Memory Item  = 看走哪条路径 ↓
 ```
 
-两条路径的 Memory Item 不一样：
+两条路径 of Memory Item 不一样：
 
 | | 旧路径 memorize | 新路径 workspace |
 |---|---|---|
@@ -230,13 +230,13 @@ ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = 
 > **但这不一定是退步**，因为：<br>
 > 1. workspace 的源文件（代码、文档）不像对话那样适合 "提取原子事实"——你怎么从一个 Python 文件里提取 standalone memory items？直接合成摘要文档再切反而更合理<br>
 > 2. workspace retrieve 有 **segment → file roll-up**：即使单行命中不精确，只要 roll up 到了正确的 file，用户拿到的是完整文档，信息不丢 <br>
-> 3. 旧路径的 entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
+> 3. 旧路径 of entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
 
 但是更关键的似乎是：
 
 **信息组织和信息检索的耦合方向反了。**
 
-因为在无穷无尽的 chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
+因为在无穷无尽 of chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
 
 但是在 workspace 里，这种碎片 -> resource 的方式不那么好用了。因为能被碎片召回的也只是代码碎片，比如召回了一个 Data Model，实际上这个 Data Model 在哪里被引用还需要再次搜索，起不到召回所有相关信息的作用。反而召回很多垃圾信息——召回了很多定义，但是对使用处和架构联系毫无关系。
 
