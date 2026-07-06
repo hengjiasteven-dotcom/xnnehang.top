@@ -108,7 +108,11 @@ workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource
 
 ### Data Model
 
-<img src="../../assets/img/memu-source-code-breakdown/data-model.png" alt="data-model" width="380" style="display:block;margin:0 auto;" />
+<div class="img-center">
+
+![data-model](../../assets/img/memu-source-code-breakdown/data-model.png)
+
+</div>
 
 ### What's new?
 
