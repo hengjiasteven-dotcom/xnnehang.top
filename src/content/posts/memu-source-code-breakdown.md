@@ -77,7 +77,7 @@ memu export
 
 然后同样把 workspace 都独立实现了。
 
-其实还是有一丢丢架构的冗余的，比如 retrieve 是否还需要保留 `RAG mode`，按道理是需要保留的，但是保留后和  `retrieve-workspace` 原理类似但做的内容又不一样。
+其实还是有一丢丢架构的冗余的，比如 retrieve 是否还需要保留 `RAG mode`，按道理是需要保留 of，但是保留后和  `retrieve-workspace` 原理类似但做的内容又不一样。
 
 但如果删了复用 `workspace` 它又和语义不一样。总之这一点会让对架构挑剔度敏感的人有一些不舒服，因为它不对称。完全使用 workspace 替代 `RAG/LLM retrieve` 最舒服的架构，但也得取舍。
 
@@ -108,7 +108,7 @@ workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource
 
 ### Data Model
 
-![](../../assets/img/memu-source-code-breakdown/data-model.png)
+<img src="../../assets/img/memu-source-code-breakdown/data-model.png" alt="data-model" width="380" style="display:block;margin:0 auto;" />
 
 ### What's new?
 
@@ -118,7 +118,7 @@ workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource
 
 **`RecallFileResource`** —— Resource 到 RecallFile 的多对多关联表（provenance）。记录"这个 file 的内容是从哪些 source file 合成来的"。旧路径通过 Entry 间接关联，新路径需要这个直接链接。
 
-**`Resource.track`** —— 新字段，标记来源：`"chat"` / `"skill"` / `"workspace"`，旧路径的 Resource 是 `None`。workspace retrieve 通过 `track="workspace"` 过滤只搜 workspace 来源 of Resource。
+**`Resource.track`** —— 新字段，标记来源：`"chat"` / `"skill"` / `"workspace"`，旧路径的 Resource 是 `None`。workspace retrieve 通过 `track="workspace"` 过滤只搜 workspace 来源的 Resource。
 
 ### 两条路径共存
 
@@ -197,7 +197,7 @@ Category     = RecallFile      （主题文档，如 "Profile"、"Goals"）
 Memory Item  = 看走哪条路径 ↓
 ```
 
-两条路径 of Memory Item 不一样：
+两条路径的 Memory Item 不一样：
 
 | | 旧路径 memorize | 新路径 workspace |
 |---|---|---|
@@ -230,18 +230,18 @@ ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = 
 > **但这不一定是退步**，因为：<br>
 > 1. workspace 的源文件（代码、文档）不像对话那样适合 "提取原子事实"——你怎么从一个 Python 文件里提取 standalone memory items？直接合成摘要文档再切反而更合理<br>
 > 2. workspace retrieve 有 **segment → file roll-up**：即使单行命中不精确，只要 roll up 到了正确的 file，用户拿到的是完整文档，信息不丢 <br>
-> 3. 旧路径 of entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
+> 3. 旧路径的 entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
 
 但是更关键的似乎是：
 
 **信息组织和信息检索的耦合方向反了。**
 
-因为在无穷无尽 of chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
+因为在无穷无尽的 chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
 
 但是在 workspace 里，这种碎片 -> resource 的方式不那么好用了。因为能被碎片召回的也只是代码碎片，比如召回了一个 Data Model，实际上这个 Data Model 在哪里被引用还需要再次搜索，起不到召回所有相关信息的作用。反而召回很多垃圾信息——召回了很多定义，但是对使用处和架构联系毫无关系。
 
 我们需要的是一个 Agent 和人类可读的高层文档。然后从这个文档里面去切出那些碎片。
 
-所以 workspace 整体而言是适合总分的形式。也是我们的新路径。
+So workspace 整体而言是适合总分的形式。也是我们的新路径。
 
-但也正因为这种特殊性，我觉得应该刻意保持 chat 和 workspace 之间的路径差异化。
+但也正因为这种特殊性，我觉得应该刻意保持 chat and workspace 之间的路径差异化。
