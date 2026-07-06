@@ -77,11 +77,11 @@ memu export
 
 然后同样把 workspace 都独立实现了。
 
-其实还是有一丢丢架构的冗余的，比如 retrieve 是否还需要保留 `RAG mode`，按道理是需要保留 of，但是保留后和  `retrieve-workspace` 原理类似但做的内容又不一样。
+其实还是有一丢丢架构的冗余的，比如 retrieve 是否还需要保留 `RAG mode`，按道理是需要保留的，但是保留后和  `retrieve-workspace` 原理类似但做的内容又不一样。
 
 但如果删了复用 `workspace` 它又和语义不一样。总之这一点会让对架构挑剔度敏感的人有一些不舒服，因为它不对称。完全使用 workspace 替代 `RAG/LLM retrieve` 最舒服的架构，但也得取舍。
 
-但是对于我来说，it's okay。以及，至少咱争取了 `LLM retrieve` 的保留。并且它似乎也真的有留下来的迹象——希望不是分多个 PR 剪除 =-=。
+辅助于我来说，it's okay。以及，至少咱争取了 `LLM retrieve` 的保留。并且它似乎也真的有留下来的迹象——希望不是分多个 PR 剪除 =-=。
 
 
 ## Data Model Changes
@@ -95,7 +95,7 @@ Resource ──1:N──▶ RecallEntry ──N:M──▶ RecallFile
                                   (通过 RecallFileEntry)
 ```
 
-一个 Resource（原始文件）产出多个 RecallEntry（LLM 提取的条目），条目通过 RecallFileEntry 关联到 RecallFile（主题文档，如 "Profile"、"Goals"）。
+一个 Resource（原始文件）产出多个 RecallEntry（LLM 提取的条目），条目通过 RecallFileEntry 关联 to RecallFile（主题文档，如 "Profile"、"Goals"）。
 
 ### latest memorize（add workspace pipline）
 
@@ -187,6 +187,8 @@ LLM 会从中提取出多条 entry：
 
 ## 三层记忆关系对应
 
+### 数据模型映射
+
 我们都知道三层记忆关系：**Resource → Category → Memory Item**。
 
 对应到数据模型：
@@ -206,6 +208,8 @@ Memory Item  = 看走哪条路径 ↓
 :::note
 ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = Memory Item）。含义一样，只是换了个编号。
 :::
+
+### 两条路径的顺序反转
 
 旧路径有个**反直觉的地方**：pipeline 先产出 Memory Item（Entry），再合成 Category（File）。顺序是从细到粗：
 
@@ -232,16 +236,24 @@ ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = 
 > 2. workspace retrieve 有 **segment → file roll-up**：即使单行命中不精确，只要 roll up 到了正确的 file，用户拿到的是完整文档，信息不丢 <br>
 > 3. 旧路径的 entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
 
+### 方向之问：为什么 workspace 不适合"分总"？
+
 但是更关键的似乎是：
 
 **信息组织和信息检索的耦合方向反了。**
 
-因为在无穷无尽的 chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
+because 在无穷无尽的 chat memory 里，只需要抓住一点点碎片化的相关片段，就可以反推召回 resource 得到所有相关的信息，且信息是完整独立的。它是适合分总的方式的。
 
 但是在 workspace 里，这种碎片 -> resource 的方式不那么好用了。因为能被碎片召回的也只是代码碎片，比如召回了一个 Data Model，实际上这个 Data Model 在哪里被引用还需要再次搜索，起不到召回所有相关信息的作用。反而召回很多垃圾信息——召回了很多定义，但是对使用处和架构联系毫无关系。
 
 我们需要的是一个 Agent 和人类可读的高层文档。然后从这个文档里面去切出那些碎片。
 
-So workspace 整体而言是适合总分的形式。也是我们的新路径。
+所以 workspace 整体而言是适合总分的形式。也是我们的新路径。
 
-但也正因为这种特殊性，我觉得应该刻意保持 chat and workspace 之间的路径差异化。
+但也正因为这种特殊性，我觉得应该刻意保持 chat 和 workspace 之间的路径差异化。
+
+---
+
+如果后续 chat 也变成"总分"的话。
+
+似乎也能被接受，但是会有一些信息损失，换来巨大的速度提升和更低的 token 消耗。这个要看取舍了，虽然我真的很喜欢 LLM mode。
