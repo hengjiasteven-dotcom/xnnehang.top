@@ -53,5 +53,7 @@ export const ko: Translation = {
 
   [Key.shelf]: '서재',
 
+  [Key.memo]: '메모',
+
   [Key.seriesNav]: '시리즈',
 }

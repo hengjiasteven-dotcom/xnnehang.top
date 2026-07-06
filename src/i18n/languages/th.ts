@@ -53,5 +53,7 @@ export const th: Translation = {
 
   [Key.shelf]: 'ชั้นหนังสือ',
 
+  [Key.memo]: 'บันทึก',
+
   [Key.seriesNav]: 'ซีรีส์',
 }

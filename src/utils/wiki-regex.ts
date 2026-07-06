@@ -11,7 +11,7 @@ export const WIKI_LINK_REGEX = /\[\[(.+?)(?:\|(.+?))?\]\]/g
  * Extract wiki link references from raw markdown text.
  * Returns array of { title, displayText } objects.
  */
-export function parseWikiLinks(text) {
+export function parseWikiLinks(text: string) {
   const links = []
   let match
   while ((match = WIKI_LINK_REGEX.exec(text)) !== null) {

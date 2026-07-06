@@ -50,6 +50,14 @@ nyakku.moe/
 4. **Commit & Push**：
    - 不涉及代码改动 → 直接 push 到 `master`
    - 涉及代码改动 → 创建新分支，等待用户提 PR
+   - **Commit message 必须使用 [Gitmoji](https://gitmoji.dev/) 前缀**，例如：
+     - `✨ feat: 新功能`
+     - `🐛 fix: 修复 bug`
+     - `♻️ refactor: 重构`
+     - `⚡️ perf: 性能优化`
+     - `✅ ci: CI 相关`
+     - `📝 docs: 文档`
+     - `⬆️ deps: 升级依赖`
 
 ### 红线
 

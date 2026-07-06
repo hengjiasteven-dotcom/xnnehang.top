@@ -53,5 +53,7 @@ export const es: Translation = {
 
   [Key.shelf]: 'Estante',
 
+  [Key.memo]: 'Memo',
+
   [Key.seriesNav]: 'Series',
 }

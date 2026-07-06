@@ -11,7 +11,6 @@ import '../styles/scrollbar.css'
 import '../styles/transition.css'
 
 import ConfigCarrier from '@components/ConfigCarrier.astro'
-import MoefyCanvas from '@components/MoefyCanvas.astro'
 import { profileConfig, siteConfig } from '@/config'
 import {
   AUTO_MODE,
@@ -255,9 +254,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
   import { pathsEqual, url } from '../utils/url-utils'
   import {
     BANNER_HEIGHT,
-    BANNER_HEIGHT_HOME,
     BANNER_HEIGHT_EXTEND,
-    MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
   } from '../constants/constants'
   import { siteConfig } from '../config'
 

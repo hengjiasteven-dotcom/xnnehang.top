@@ -30,17 +30,17 @@ export async function getStaticPaths() {
   const { graph: wikiGraph, slugToTitle } = await buildWikiGraphWithTitles()
   const serializedGraph = serializeWikiGraphWithTitles(wikiGraph, slugToTitle)
 
-  const allPosts = blogEntries.map((post) => ({
+  const allPosts = blogEntries.map((post: CollectionEntry<'posts'>) => ({
     slug: post.id,
     data: post.data,
   }))
 
-  return Promise.all(blogEntries.map(async (entry) => {
+  return Promise.all(blogEntries.map(async (entry: CollectionEntry<'posts'>) => {
     const relatedPosts = getRelatedByTfidf(entry.id, tfidfIndex, 5)
     const miniGraphData = getMiniGraph(serializedGraph, entry.id)
 
     // Enrich related posts with firstImage from rendered body
-    const relatedWithImg = await Promise.all(relatedPosts.map(async (rp) => {
+    const relatedWithImg = await Promise.all(relatedPosts.map(async (rp: { slug: string; data: CollectionEntry<'posts'>['data'] }) => {
       const full = blogEntries.find((e) => e.id === rp.slug)
       if (!full) return { ...rp, firstImage: '' }
       const { remarkPluginFrontmatter } = await render(full)
@@ -202,7 +202,6 @@ const jsonLd = {
             const start = Math.max(0, currentIndex - AROUND_WINDOW)
             const end = Math.min(total, currentIndex + AROUND_WINDOW + 1)
             const visiblePosts = seriesPosts.slice(start, end)
-            const isTruncated = total > AROUND_WINDOW * 2 + 1
 
             return (
               <div class="series-nav onload-animation card-base mb-4 rounded-2xl p-5">

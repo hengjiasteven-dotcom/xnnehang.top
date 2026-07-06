@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
 import { WIKI_LINK_REGEX } from './wiki-regex'
 
 export type WikiLinkInfo = {
@@ -22,7 +22,7 @@ export type WikiGraphResult = {
  * Used by graph serialization to get accurate titles.
  */
 export async function buildWikiGraphWithTitles(): Promise<WikiGraphResult> {
-  const allPosts = await getCollection('posts', ({ data }) => {
+  const allPosts = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 

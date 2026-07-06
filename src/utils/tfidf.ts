@@ -25,13 +25,13 @@ function tokenize(text: string): string[] {
 }
 
 export async function buildTfidfIndex(): Promise<TfidfIndex> {
-  const allPosts = await getCollection('posts', ({ data }) => {
+  const allPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
   const posts: PostForRelated[] = allPosts
-    .filter((p) => p.body)
-    .map((p) => ({
+    .filter((p: CollectionEntry<'posts'>) => p.body)
+    .map((p: CollectionEntry<'posts'>) => ({
       slug: p.id,
       data: p.data,
     }))

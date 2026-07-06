@@ -5,11 +5,11 @@ import { getCategoryUrl } from '@utils/url-utils.ts'
 
 // // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
-  const allBlogPosts = await getCollection('posts', ({ data }) => {
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
-  const sorted = allBlogPosts.sort((a, b) => {
+  const sorted = allBlogPosts.sort((a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => {
     const dateA = new Date(a.data.published)
     const dateB = new Date(b.data.published)
     return dateA > dateB ? -1 : 1
@@ -39,7 +39,7 @@ export async function getSortedPostsList(): Promise<PostForList[]> {
   const sortedFullPosts = await getRawSortedPosts()
 
   // delete post.body
-  const sortedPostsList = sortedFullPosts.map((post) => ({
+  const sortedPostsList = sortedFullPosts.map((post: CollectionEntry<'posts'>) => ({
     slug: post.id,
     data: post.data,
   }))
@@ -52,12 +52,12 @@ export type Tag = {
 }
 
 export async function getTagList(): Promise<Tag[]> {
-  const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
   const countMap: { [key: string]: number } = {}
-  allBlogPosts.forEach((post: { data: { tags: string[] } }) => {
+  allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {
     post.data.tags.forEach((tag: string) => {
       if (!countMap[tag]) countMap[tag] = 0
       countMap[tag]++
@@ -84,11 +84,11 @@ export type Series = {
 }
 
 export async function getCategoryList(): Promise<Category[]> {
-  const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
   const count: { [key: string]: number } = {}
-  allBlogPosts.forEach((post: { data: { category: string | null } }) => {
+  allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {
     if (!post.data.category) {
       const ucKey = i18n(I18nKey.uncategorized)
       count[ucKey] = count[ucKey] ? count[ucKey] + 1 : 1
@@ -119,14 +119,14 @@ export async function getCategoryList(): Promise<Category[]> {
 }
 
 export async function getSeriesList(): Promise<Series[]> {
-  const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
   const seriesMap: Map<string, PostForList[]> = new Map()
-  allBlogPosts.forEach((post) => {
+  allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {
     const names = post.data.series || []
-    names.forEach((name) => {
+    names.forEach((name: string) => {
       if (!seriesMap.has(name)) seriesMap.set(name, [])
       seriesMap.get(name)!.push(post)
     })

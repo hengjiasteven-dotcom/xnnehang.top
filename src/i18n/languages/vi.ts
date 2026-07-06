@@ -53,5 +53,7 @@ export const vi: Translation = {
 
   [Key.shelf]: 'Giá sách',
 
+  [Key.memo]: 'Ghi chú',
+
   [Key.seriesNav]: 'Loạt bài',
 }

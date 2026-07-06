@@ -189,8 +189,8 @@ const maxLevel = siteConfig.toc.depth
       if (!this.sections.length) return
 
       for (let i = 0; i < this.sections.length; i++) {
-        let offsetTop = this.sections[i].getBoundingClientRect().top
-        let offsetBottom = this.sections[i].getBoundingClientRect().bottom
+        let offsetTop = this.sections[i]!.getBoundingClientRect().top
+        let offsetBottom = this.sections[i]!.getBoundingClientRect().bottom
 
         if (
           this.isInRange(offsetTop, 0, window.innerHeight) ||
@@ -213,7 +213,7 @@ const maxLevel = siteConfig.toc.depth
         const id = decodeURIComponent(anchor.hash?.substring(1))
         const idx = this.headingIdxMap.get(id)
         if (idx !== undefined) {
-          this.anchorNavTarget = this.headings[idx]
+          this.anchorNavTarget = this.headings[idx] ?? null
         } else {
           this.anchorNavTarget = null
         }
