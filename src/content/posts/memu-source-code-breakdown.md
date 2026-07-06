@@ -12,6 +12,12 @@ series:
   - Long-Term Memory
 featured: true
 ---
+![](../../assets/img/memu-source-code-breakdown/cover.jpeg)
+
+> [!NOTE]
+> **AI 协作声明：** 本文由 Xnne 与 [Korewaxnne](https://github.com/xnne-bot)（赛博猫猫）共同撰写。Xnne 负责内容方向和技术分析，Korewaxnne 协助了结构组织、语法润色和格式整理。<br>
+> 并且，这个博客会长期更新。
+
 上次其实已经拆过一次 memU 了。
 
 但是因为处在架构迭代期，并且也没有 ADR0007 的阅读指导。所以这边把上次的 break down 全部都删除了。这无形中又增加了这篇的阅读难度，我尽量地让它更简单。
@@ -106,9 +112,9 @@ workspace 路径跳过了 RecallEntry，Resource 直接通过 RecallFileResource
 
 ### What's new?
 
-**`RecallFileSegment`** —— 最重要的新增。一个 RecallFile 被切成 1~N 个 segment，每个 segment 有自己的 text 和 embedding。检索时搜 segment，命中后 roll up 到所属的 file。切法按 track 不同：
+**`RecallFileSegment`** —— 最重要的新增。一个 RecallFile 被切成 1~N 个 segment，每个 segment 有自己的 text 和 embedding。检索时搜 segment，命中后 roll up 到所属的 file。切法按 track classification：
 - skill：整个 skill 一个 segment（`name: ...\ndescription: ...`）
-- memory：按行切，跳过空行 and markdown heading
+- memory：按行切，跳过空行和 markdown heading
 
 **`RecallFileResource`** —— Resource 到 RecallFile 的多对多关联表（provenance）。记录"这个 file 的内容是从哪些 source file 合成来的"。旧路径通过 Entry 间接关联，新路径需要这个直接链接。
 
@@ -151,7 +157,9 @@ workspace track 的文件只存 Resource（带 caption + embedding），用于 `
 
 RecallFileSegment.track 是从所属 RecallFile 冗余复制过来的，目的是检索时不用 join 就能按 track 过滤。
 
-> 后续似乎要把 track 字段丢弃，把 chat、workspace、skill 分别存进不同的数据库表结构中。那样会更干净一些。
+:::note
+后续似乎要把 track 字段丢弃，把 chat、workspace、skill 分别存进不同的数据库表结构中。那样会更干净一些。
+:::
 ### what's entry?
 
 Entry（`RecallEntry`）是旧 memorize 路径的核心中间产物——LLM 从源内容里**提取出来的原子事实**。
@@ -173,7 +181,7 @@ LLM 会从中提取出多条 entry：
 
 `memory_type` 一共有 6 种：`profile`、`event`、`knowledge`、`behavior`、`skill`、`tool`。每种类型有自己的提取 prompt，LLM 按类型分别跑一遍，各自提取属于该类型的条目。
 
-提取出来的 entry 会被 embed，然后通过 `RecallFileEntry` 归类到对应的 `RecallFile`（主题文档）里。多条 entry 汇总到同一个 file，file 的 content 就是这些 entry 的综合摘要。
+提取出来的 entry 会被 embed，然后通过 `RecallFileEntry` 归类到对应的 `RecallFile`（主题文档）里。多条 entry 汇总到同一个 file，file 的 content 就是 these entry 的综合摘要。
 
 **workspace 路径为什么跳过了 entry？** 因为 workspace 的源文件（代码、文档、配置）不是对话，不适合按 memory_type 提取原子事实。workspace 路径直接让 LLM 把源内容 route + synthesize 到 RecallFile，省掉了中间的 entry 层。
 
@@ -189,13 +197,15 @@ Category     = RecallFile      （主题文档，如 "Profile"、"Goals"）
 Memory Item  = 看走哪条路径 ↓
 ```
 
-两条路径 of Memory Item 不一样：
+两条路径的 Memory Item 不一样：
 
 | | 旧路径 memorize | 新路径 workspace |
 |---|---|---|
 | Memory Item | `RecallEntry`（LLM 提取的原子事实） | `RecallFileSegment`（文档的切片） |
 
-> ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = Memory Item）。含义一样，只是换了个编号。
+:::note
+ADR 0007 里管这三层叫 L0 / L1 / L2（L0 = Resource，L1 = Category，L2 = Memory Item）。含义一样，只是换了个编号。
+:::
 
 旧路径有个**反直觉的地方**：pipeline 先产出 Memory Item（Entry），再合成 Category（File）。顺序是从细到粗：
 
@@ -204,8 +214,8 @@ Memory Item  = 看走哪条路径 ↓
 ```
 
 
-> Q:我会好奇，这个合成(旧路径 Entry -> Category)是直接拼接，还是说又调了一次 LLM?<br>
-> A:不是直接拼接，又调用了一次 LLM。
+> Q: 我会好奇，这个合成(旧路径 Entry -> Category)是直接拼接，还是说又调了一次 LLM?<br>
+> A: 不是直接拼接，又调用了一次 LLM。
 
 
 新路径则调转过来了：
@@ -220,7 +230,7 @@ Memory Item  = 看走哪条路径 ↓
 > **但这不一定是退步**，因为：<br>
 > 1. workspace 的源文件（代码、文档）不像对话那样适合 "提取原子事实"——你怎么从一个 Python 文件里提取 standalone memory items？直接合成摘要文档再切反而更合理<br>
 > 2. workspace retrieve 有 **segment → file roll-up**：即使单行命中不精确，只要 roll up 到了正确的 file，用户拿到的是完整文档，信息不丢 <br>
-> 3. 旧路径 of entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
+> 3. 旧路径的 entry 检索虽然精确，但 entry 是孤立的——你拿到一条 `"用户喜欢黑咖啡"` 没有上下文。新路径 roll up 到 file 后有完整的主题文档 <br>
 
 但是更关键的似乎是：
 
@@ -232,6 +242,6 @@ Memory Item  = 看走哪条路径 ↓
 
 我们需要的是一个 Agent 和人类可读的高层文档。然后从这个文档里面去切出那些碎片。
 
-So workspace 整体而言是适合总分的形式。也是我们的新路径。
+所以 workspace 整体而言是适合总分的形式。也是我们的新路径。
 
 但也正因为这种特殊性，我觉得应该刻意保持 chat 和 workspace 之间的路径差异化。
