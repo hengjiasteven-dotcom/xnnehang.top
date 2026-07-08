@@ -10,6 +10,9 @@ async function getRawSortedPosts() {
   })
 
   const sorted = allBlogPosts.sort((a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => {
+    const aPin = a.data.pin ? 1 : 0
+    const bPin = b.data.pin ? 1 : 0
+    if (aPin !== bPin) return bPin - aPin
     const dateA = new Date(a.data.published)
     const dateB = new Date(b.data.published)
     return dateA > dateB ? -1 : 1
