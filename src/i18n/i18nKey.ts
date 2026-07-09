@@ -51,6 +51,8 @@ enum I18nKey {
   shelf = 'shelf',
   memo = 'memo',
   seriesNav = 'seriesNav',
+
+  pinned = 'pinned',
 }
 
 export default I18nKey

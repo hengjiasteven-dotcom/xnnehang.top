@@ -56,4 +56,6 @@ export const zh_CN: Translation = {
   [Key.memo]: '碎碎念',
 
   [Key.seriesNav]: '系列',
+
+  [Key.pinned]: '置顶',
 }

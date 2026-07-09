@@ -32,15 +32,27 @@ const { remarkPluginFrontmatter } = await render(entry)
 
 const coverUrl = image || remarkPluginFrontmatter.firstImage || ''
 const hasCover = coverUrl !== ''
+const isPinned = entry.data.pin
 ---
 
 <div
   class:list={[
     'card-base relative flex w-full flex-col-reverse overflow-hidden rounded-[var(--radius-large)] md:flex-col',
+    { 'pinned-card': isPinned },
     className,
   ]}
   style={style}
 >
+  {
+    isPinned && (
+      <div class="absolute top-0 left-0 z-30 flex h-6 w-6 items-center justify-center rounded-br-lg bg-[var(--primary)]">
+        <Icon
+          name="material-symbols:keep-rounded"
+          class="-rotate-45 text-sm text-white dark:text-[var(--deep-text)]"
+        />
+      </div>
+    )
+  }
   <div
     class:list={[
       'relative pt-6 pr-6 pb-6 pl-6 md:pt-7 md:pr-2 md:pl-9',
@@ -54,6 +66,7 @@ const hasCover = coverUrl !== ''
       href={url}
       class="text-90 group mb-3 block w-full text-3xl font-bold transition before:absolute before:top-[35px] before:left-[18px] before:hidden before:h-5 before:w-1 before:rounded-md before:bg-[var(--primary)] hover:text-[var(--primary)] active:text-[var(--title-active)] md:before:block dark:hover:text-[var(--primary)] dark:active:text-[var(--title-active)]"
     >
+      {isPinned && <span class="sr-only">{i18n(I18nKey.pinned)}</span>}
       {title}
       <Icon
         class="absolute inline translate-y-0.5 text-[2rem] text-[var(--primary)] md:hidden"
@@ -151,4 +164,15 @@ const hasCover = coverUrl !== ''
 >
 </div>
 
-<style define:vars={{ coverWidth }}></style>
+<style define:vars={{ coverWidth }}>
+  .pinned-card {
+    background: color-mix(in srgb, var(--card-bg) 92%, var(--primary));
+  }
+  .pinned-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0.25rem;
+    background: var(--primary);
+  }
+</style>

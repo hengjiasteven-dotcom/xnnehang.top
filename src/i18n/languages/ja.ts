@@ -56,4 +56,6 @@ export const ja: Translation = {
   [Key.memo]: 'メモ',
 
   [Key.seriesNav]: 'シリーズ',
+
+  [Key.pinned]: 'ピン留め',
 }

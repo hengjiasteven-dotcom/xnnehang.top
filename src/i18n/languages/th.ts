@@ -56,4 +56,6 @@ export const th: Translation = {
   [Key.memo]: 'บันทึก',
 
   [Key.seriesNav]: 'ซีรีส์',
+
+  [Key.pinned]: 'ปักหมุด',
 }

@@ -56,4 +56,6 @@ export const vi: Translation = {
   [Key.memo]: 'Ghi chú',
 
   [Key.seriesNav]: 'Loạt bài',
+
+  [Key.pinned]: 'Đã ghim',
 }

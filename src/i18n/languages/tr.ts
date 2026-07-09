@@ -56,4 +56,6 @@ export const tr: Translation = {
   [Key.memo]: 'Not',
 
   [Key.seriesNav]: 'Seriler',
+
+  [Key.pinned]: 'Sabitlenmiş',
 }

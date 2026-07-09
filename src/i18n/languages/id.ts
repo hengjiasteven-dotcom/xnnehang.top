@@ -56,4 +56,6 @@ export const id: Translation = {
   [Key.memo]: 'Memo',
 
   [Key.seriesNav]: 'Seri',
+
+  [Key.pinned]: 'Disematkan',
 }

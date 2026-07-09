@@ -56,4 +56,6 @@ export const ko: Translation = {
   [Key.memo]: '메모',
 
   [Key.seriesNav]: '시리즈',
+
+  [Key.pinned]: '고정됨',
 }

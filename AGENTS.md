@@ -75,19 +75,11 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 - [ ] Run `vp check` and `vp test` to validate changes.
 <!--VITE PLUS END-->
 
-## Astro Markdown Images
-When dealing with Astro markdown files, if an image file has spaces in its name (e.g., `Pasted image 123.png`), DO NOT rename the image file or URL encode it. Instead, use the standard Markdown angle bracket syntax to enclose the path: `![alt](<../../assets/img/Pasted image 123.png>)`. Astro requires this format to correctly resolve paths with spaces during the build process.
+## Gotchas
 
-## HTML img Tag Restriction for Astro Images
-Astro's markdown compiler does not resolve or hash relative paths of local image assets inside standard HTML `<img>` tags (e.g. `<img src="../../assets/img/..."/>`). This will result in broken image links in the production build.
-To resize or style an image (e.g., limit its width or center it), DO NOT use HTML `<img>` tags. Instead, wrap a standard Markdown image tag inside a block-level HTML element (such as `<div class="img-center" style="max-width: 24rem; margin: 0 auto;">`) and leave blank lines around the Markdown image so the parser parses it correctly:
-```html
-<div class="img-center" style="max-width: 24rem; margin: 0 auto;">
+Known pitfalls are documented in [gotcha.md](./gotcha.md). Skim this index; open the linked entry only when your task touches that area:
 
-![alt](../../assets/img/...)
-
-</div>
-```
-
-## Markdown Heading Depths for TOC
-In markdown blog posts, the `h1` (`#`) is usually reserved for the post title (defined in frontmatter). All content headings MUST start from `h2` (`##`) and go down from there (`###`, `####`). If you use `#` for a section heading, it breaks the TOC (Table of Contents) generation by making the `minDepth` 1, which causes the TOC to filter out `h3` and `h4` headings. When debugging missing headings in the TOC, always check if the file incorrectly uses an `h1` (`#`) in the content.
+- **Image filenames with spaces** — never rename or URL-encode; use Markdown angle-bracket syntax `![alt](<path with spaces>)`. → [details](./gotcha.md#astro-markdown-images)
+- **HTML `<img>` with local assets** — Astro won't resolve relative paths in raw `<img>` tags; wrap a Markdown image in a styled block element instead. → [details](./gotcha.md#html-img-tag-restriction-for-astro-images)
+- **Heading depths in posts** — content headings start at `##`; a stray `#` breaks TOC depth filtering. → [details](./gotcha.md#markdown-heading-depths-for-toc)
+- **Adding i18n keys** — `Translation` is a mapped type over `I18nKey`; a new key must be added to all 10 files in `src/i18n/languages/`. → [details](./gotcha.md#i18n-keys-require-all-language-files)

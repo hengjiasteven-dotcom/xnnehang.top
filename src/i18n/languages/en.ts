@@ -56,4 +56,6 @@ export const en: Translation = {
   [Key.memo]: 'Murmurs',
 
   [Key.seriesNav]: 'Series',
+
+  [Key.pinned]: 'Pinned',
 }
