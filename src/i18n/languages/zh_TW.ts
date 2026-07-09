@@ -58,4 +58,8 @@ export const zh_TW: Translation = {
   [Key.seriesNav]: '系列',
 
   [Key.pinned]: '置頂',
+
+  [Key.lastEditedAt]: '更新於',
+  [Key.revisionCount]: '次修訂',
+  [Key.revisionsCount]: '次修訂',
 }

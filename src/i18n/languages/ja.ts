@@ -58,4 +58,8 @@ export const ja: Translation = {
   [Key.seriesNav]: 'シリーズ',
 
   [Key.pinned]: 'ピン留め',
+
+  [Key.lastEditedAt]: '更新日',
+  [Key.revisionCount]: '回の改訂',
+  [Key.revisionsCount]: '回の改訂',
 }

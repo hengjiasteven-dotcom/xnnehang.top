@@ -58,4 +58,8 @@ export const th: Translation = {
   [Key.seriesNav]: 'ซีรีส์',
 
   [Key.pinned]: 'ปักหมุด',
+
+  [Key.lastEditedAt]: 'อัปเดตเมื่อ',
+  [Key.revisionCount]: 'การแก้ไข',
+  [Key.revisionsCount]: 'การแก้ไข',
 }

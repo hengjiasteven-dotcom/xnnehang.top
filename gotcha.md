@@ -26,3 +26,7 @@ In markdown blog posts, the `h1` (`#`) is usually reserved for the post title (d
 ## i18n Keys Require All Language Files
 
 `Translation` in `src/i18n/translation.ts` is a mapped type over the `I18nKey` enum (`{ [K in I18nKey]: string }`). Adding a key to `src/i18n/i18nKey.ts` breaks type-checking for EVERY language file in `src/i18n/languages/` (10 files: en, zh_CN, zh_TW, ja, ko, es, id, th, tr, vi) until the key is added to each of them. When adding a UI string, update all 10 language files in the same change, then run `astro check` to confirm.
+
+## Git-Derived Metadata Needs a Full Clone in CI
+
+Post pages read "last modified" and "revision count" from `git log` at build time (`src/utils/git-utils.ts`). `actions/checkout` defaults to a shallow clone (`fetch-depth: 1`), which silently truncates history: every post then builds with revision count 1 and today's date — no error, just wrong values. Any workflow that runs `astro build` (or anything else touching git history) MUST set `fetch-depth: 0` on its checkout step. Locally the same applies to shallow clones (`git clone --depth`).

@@ -58,4 +58,8 @@ export const zh_CN: Translation = {
   [Key.seriesNav]: '系列',
 
   [Key.pinned]: '置顶',
+
+  [Key.lastEditedAt]: '更新于',
+  [Key.revisionCount]: '次修订',
+  [Key.revisionsCount]: '次修订',
 }

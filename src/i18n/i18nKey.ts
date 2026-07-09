@@ -53,6 +53,10 @@ enum I18nKey {
   seriesNav = 'seriesNav',
 
   pinned = 'pinned',
+
+  lastEditedAt = 'lastEditedAt',
+  revisionCount = 'revisionCount',
+  revisionsCount = 'revisionsCount',
 }
 
 export default I18nKey

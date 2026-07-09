@@ -6,6 +6,7 @@ import I18nKey from '@i18n/i18nKey'
 import { i18n } from '@i18n/translation'
 import MainGridLayout from '@layouts/MainGridLayout.astro'
 import { getSortedPosts } from '@utils/content-utils'
+import { getGitFileInfo } from '@utils/git-utils'
 import { buildTfidfIndex, getRelatedByTfidf } from '@utils/tfidf'
 import { buildWikiGraphWithTitles } from '@utils/wikilinks'
 import { serializeWikiGraphWithTitles, getMiniGraph } from '@utils/graph-serialize'
@@ -57,6 +58,8 @@ export async function getStaticPaths() {
 const { entry, allPosts, relatedPosts, miniGraphData } = Astro.props
 const { Content, headings, remarkPluginFrontmatter } = await render(entry)
 
+const gitInfo = getGitFileInfo(entry.filePath)
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -91,9 +94,9 @@ const jsonLd = {
       id="post-container"
       class:list={['card-base relative z-10 w-full px-6 pt-6 pb-4 md:px-9', {}]}
     >
-      <!-- word count and reading time -->
+      <!-- word count, reading time and git history -->
       <div
-        class="onload-animation mb-3 flex flex-row gap-5 text-black/30 transition dark:text-white/30"
+        class="onload-animation mb-3 flex flex-row flex-wrap gap-x-5 gap-y-2 text-black/30 transition dark:text-white/30"
       >
         <div class="flex flex-row items-center">
           <div
@@ -122,6 +125,31 @@ const jsonLd = {
             }
           </div>
         </div>
+        {
+          gitInfo.lastModified && (
+            <div class="flex flex-row items-center">
+              <div class="mr-2 flex h-6 w-6 items-center justify-center rounded-md bg-black/5 text-black/50 transition dark:bg-white/10 dark:text-white/50">
+                <Icon name="material-symbols:update-rounded" />
+              </div>
+              <div class="text-sm">
+                {i18n(I18nKey.lastEditedAt) + ' ' + formatDateToYYYYMMDD(gitInfo.lastModified)}
+              </div>
+            </div>
+          )
+        }
+        {
+          gitInfo.editCount > 0 && (
+            <div class="flex flex-row items-center">
+              <div class="mr-2 flex h-6 w-6 items-center justify-center rounded-md bg-black/5 text-black/50 transition dark:bg-white/10 dark:text-white/50">
+                <Icon name="material-symbols:history-rounded" />
+              </div>
+              <div class="text-sm">
+                {gitInfo.editCount}
+                {' ' + i18n(gitInfo.editCount === 1 ? I18nKey.revisionCount : I18nKey.revisionsCount)}
+              </div>
+            </div>
+          )
+        }
       </div>
 
       <!-- title -->

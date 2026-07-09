@@ -58,4 +58,8 @@ export const id: Translation = {
   [Key.seriesNav]: 'Seri',
 
   [Key.pinned]: 'Disematkan',
+
+  [Key.lastEditedAt]: 'Diperbarui',
+  [Key.revisionCount]: 'revisi',
+  [Key.revisionsCount]: 'revisi',
 }

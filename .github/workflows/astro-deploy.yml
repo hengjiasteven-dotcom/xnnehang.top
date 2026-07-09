@@ -13,6 +13,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          # Full history: post pages derive last-modified / revision count from git log
+          fetch-depth: 0
           submodules: true
 
       - uses: pnpm/action-setup@v6

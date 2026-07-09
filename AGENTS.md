@@ -83,3 +83,4 @@ Known pitfalls are documented in [gotcha.md](./gotcha.md). Skim this index; open
 - **HTML `<img>` with local assets** — Astro won't resolve relative paths in raw `<img>` tags; wrap a Markdown image in a styled block element instead. → [details](./gotcha.md#html-img-tag-restriction-for-astro-images)
 - **Heading depths in posts** — content headings start at `##`; a stray `#` breaks TOC depth filtering. → [details](./gotcha.md#markdown-heading-depths-for-toc)
 - **Adding i18n keys** — `Translation` is a mapped type over `I18nKey`; a new key must be added to all 10 files in `src/i18n/languages/`. → [details](./gotcha.md#i18n-keys-require-all-language-files)
+- **Git-derived post metadata in CI** — builds read `git log`; workflows running `astro build` need `fetch-depth: 0` or values are silently wrong. → [details](./gotcha.md#git-derived-metadata-needs-a-full-clone-in-ci)

@@ -58,4 +58,8 @@ export const ko: Translation = {
   [Key.seriesNav]: '시리즈',
 
   [Key.pinned]: '고정됨',
+
+  [Key.lastEditedAt]: '수정일',
+  [Key.revisionCount]: '회 수정',
+  [Key.revisionsCount]: '회 수정',
 }

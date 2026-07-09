@@ -58,4 +58,8 @@ export const vi: Translation = {
   [Key.seriesNav]: 'Loạt bài',
 
   [Key.pinned]: 'Đã ghim',
+
+  [Key.lastEditedAt]: 'Cập nhật',
+  [Key.revisionCount]: 'lần sửa',
+  [Key.revisionsCount]: 'lần sửa',
 }

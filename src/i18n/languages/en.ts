@@ -58,4 +58,8 @@ export const en: Translation = {
   [Key.seriesNav]: 'Series',
 
   [Key.pinned]: 'Pinned',
+
+  [Key.lastEditedAt]: 'Updated',
+  [Key.revisionCount]: 'revision',
+  [Key.revisionsCount]: 'revisions',
 }

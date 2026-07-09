@@ -58,4 +58,8 @@ export const tr: Translation = {
   [Key.seriesNav]: 'Seriler',
 
   [Key.pinned]: 'Sabitlenmiş',
+
+  [Key.lastEditedAt]: 'Güncellendi',
+  [Key.revisionCount]: 'revizyon',
+  [Key.revisionsCount]: 'revizyon',
 }
