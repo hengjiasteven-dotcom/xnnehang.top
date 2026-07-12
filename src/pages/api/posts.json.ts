@@ -15,20 +15,25 @@ const BLOG_RAW_BASE =
 
 function resolveImageUrl(image: string | undefined): string | null {
   if (!image) return null
-  if (image.startsWith('http://') || image.startsWith('https://')) return image
+  let path = image.trim()
+  // Strip angle brackets `<...>` if present (used in markdown for paths with spaces)
+  if (path.startsWith('<') && path.endsWith('>')) {
+    path = path.slice(1, -1).trim()
+  }
+  if (path.startsWith('http://') || path.startsWith('https://')) return encodeURI(path)
 
   // Strip leading "../" to get path relative to src/
   // e.g. "../../assets/img/covers/foo.jpg" → "assets/img/covers/foo.jpg"
-  const stripped = image.replace(/^(\.\.\/)+/, '')
+  const stripped = path.replace(/^(\.\.\/)+/, '')
 
   // src/assets/img/** lives in the image-hosting submodule
   if (stripped.startsWith('assets/img/')) {
     const subPath = stripped.slice('assets/img/'.length) // e.g. "covers/foo.jpg"
-    return `${IMAGE_HOSTING_RAW_BASE}/${subPath}`
+    return encodeURI(`${IMAGE_HOSTING_RAW_BASE}/${subPath}`)
   }
 
   // Everything else: resolve against main blog repo
-  return `${BLOG_RAW_BASE}/src/${stripped}`
+  return encodeURI(`${BLOG_RAW_BASE}/src/${stripped}`)
 }
 
 // Extract the first markdown image from post body as a cover fallback.
