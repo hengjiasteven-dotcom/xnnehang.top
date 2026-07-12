@@ -9,7 +9,7 @@ tags:
 description: 用我自己的白话来讲一遍 TF-IDF。从 term 与分词开始，到 TF、IDF、查询打分、BM25，再到博客里推荐相关文章的实践。也算是还了一下没听 NLP 老师课的债，有需要再学果然更容易看进去。
 featured: true
 ---
-![](../../assets/img/about-comeback-learn-tfidf/【恋风】20260702155755.jpeg)
+![](<../../assets/img/about-comeback-learn-tfidf/Pasted image 20260712225849.png>)
 
 > [!NOTE]
 > **AI 协作声明：** 本文由 Xnne 撰写，[Korewaxnne](https://github.com/xnne-bot)（AI 助手）协助了结构组织和语法润色。
