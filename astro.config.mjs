@@ -22,6 +22,7 @@ import {
   satteriKatexInline,
   satteriReadingTime,
   satteriSectionize,
+  satteriWikiLinkClass,
   satteriWikiLinks,
 } from './src/plugins/satteri-markdown.mjs'
 
@@ -118,6 +119,7 @@ export default defineConfig({
         satteriKatexDisplay,
         satteriKatexInline,
         satteriDirectiveComponents,
+        satteriWikiLinkClass,
         satteriExternalLinks,
         ...satteriSectionize(),
         satteriHeadingIdsPlugin,

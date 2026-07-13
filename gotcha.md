@@ -27,6 +27,10 @@ In markdown blog posts, the `h1` (`#`) is usually reserved for the post title (d
 
 `Translation` in `src/i18n/translation.ts` is a mapped type over the `I18nKey` enum (`{ [K in I18nKey]: string }`). Adding a key to `src/i18n/i18nKey.ts` breaks type-checking for EVERY language file in `src/i18n/languages/` (10 files: en, zh_CN, zh_TW, ja, ko, es, id, th, tr, vi) until the key is added to each of them. When adding a UI string, update all 10 language files in the same change, then run `astro check` to confirm.
 
+## Sätteri Plugins Cannot Mutate the AST via JS Splice
+
+Sätteri keeps the markdown AST in a Rust memory arena; the JS nodes passed to plugin handlers are read-only proxies. Calling `parent.children.splice()` (the standard remark pattern) silently does nothing — the Rust tree is unchanged and the original text passes through unmodified. To replace a node in an mdast plugin, return `{ raw: "..." }` (re-parsed markdown) or a structured node from the handler. To mutate in-place, use `ctx.replaceNode()`, `ctx.insertAfter()`, `ctx.setProperty()`, etc. — these write to a command buffer that the Rust side applies after the pass. The same applies to hast plugins: use `ctx.setProperty()` and return values, not direct property assignment.
+
 ## Git-Derived Metadata Needs a Full Clone in CI
 
 Post pages read "last modified" and "revision count" from `git log` at build time (`src/utils/git-utils.ts`). `actions/checkout` defaults to a shallow clone (`fetch-depth: 1`), which silently truncates history: every post then builds with revision count 1 and today's date — no error, just wrong values. Any workflow that runs `astro build` (or anything else touching git history) MUST set `fetch-depth: 0` on its checkout step. Locally the same applies to shallow clones (`git clone --depth`).

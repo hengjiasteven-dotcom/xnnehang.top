@@ -183,61 +183,49 @@ function buildTitleMap() {
   return titleToSlug
 }
 
+const WIKILINK_HASH = '#_wl'
+
 export function satteriWikiLinks() {
   const map = buildTitleMap()
 
   return {
     name: 'nyakku-wikilinks',
-    text(node, ctx) {
+    text(node) {
       if (!node.value.includes('[[')) return
 
-      const parent = ctx.parent(node)
-      if (!parent || !Array.isArray(parent.children)) return
-
-      const index = ctx.indexOf(node)
-      if (index === undefined || index === -1) return
-
-      const children = []
-      let lastIndex = 0
+      let hasMatch = false
 
       WIKI_LINK_REGEX.lastIndex = 0
-      let match
-
-      while ((match = WIKI_LINK_REGEX.exec(node.value)) !== null) {
-        if (match.index > lastIndex) {
-          children.push({ type: 'text', value: node.value.slice(lastIndex, match.index) })
-        }
-
-        const title = match[1].trim()
-        const displayText = (match[2] || match[1]).trim()
+      const result = node.value.replace(WIKI_LINK_REGEX, (_full, rawTitle, rawDisplay) => {
+        const title = rawTitle.trim()
+        const displayText = (rawDisplay || rawTitle).trim()
         const slug = map.get(normalizeQuotes(title.toLowerCase()))
 
         if (slug) {
-          children.push({
-            type: 'link',
-            url: `/posts/${slug}/`,
-            children: [{ type: 'text', value: displayText }],
-            data: {
-              hProperties: {
-                class: 'wikilink',
-              },
-            },
-          })
-        } else {
-          console.warn(`[wikilink] ⚠️  "${title}" 没有匹配到任何文章`)
-          children.push({ type: 'text', value: displayText })
+          hasMatch = true
+          return `[${displayText}](/posts/${slug}/${WIKILINK_HASH})`
         }
+        console.warn(`[wikilink] ⚠️  "${title}" 没有匹配到任何文章`)
+        return displayText
+      })
 
-        lastIndex = match.index + match[0].length
-      }
+      if (hasMatch) return { raw: result }
+    },
+  }
+}
 
-      if (lastIndex < node.value.length) {
-        children.push({ type: 'text', value: node.value.slice(lastIndex) })
-      }
+export function satteriWikiLinkClass() {
+  return {
+    name: 'nyakku-wikilink-class',
+    element: {
+      filter: ['a'],
+      visit(node, ctx) {
+        const href = node.properties?.href
+        if (typeof href !== 'string' || !href.endsWith(WIKILINK_HASH)) return
 
-      if (children.length > 0) {
-        parent.children.splice(index, 1, ...children)
-      }
+        ctx.setProperty(node, 'href', href.slice(0, -WIKILINK_HASH.length))
+        ctx.setProperty(node, 'className', ['wikilink'])
+      },
     },
   }
 }
