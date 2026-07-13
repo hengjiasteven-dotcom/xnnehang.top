@@ -31,6 +31,18 @@ In markdown blog posts, the `h1` (`#`) is usually reserved for the post title (d
 
 Sätteri keeps the markdown AST in a Rust memory arena; the JS nodes passed to plugin handlers are read-only proxies. Calling `parent.children.splice()` (the standard remark pattern) silently does nothing — the Rust tree is unchanged and the original text passes through unmodified. To replace a node in an mdast plugin, return `{ raw: "..." }` (re-parsed markdown) or a structured node from the handler. To mutate in-place, use `ctx.replaceNode()`, `ctx.insertAfter()`, `ctx.setProperty()`, etc. — these write to a command buffer that the Rust side applies after the pass. The same applies to hast plugins: use `ctx.setProperty()` and return values, not direct property assignment.
 
+## PR Body Must Follow the Pull Request Template
+
+Before running `gh pr create`, read `.github/PULL_REQUEST_TEMPLATE.md` and fill every section. The template defines three required sections:
+
+1. **动机** — describe what changed and why; link related issues with `fixes #N`, `closes #N`, or `related to #N`
+2. **解决方案** — explain the approach, especially for non-trivial changes
+3. **类型** — check at least one box by changing `[ ]` to `[x]`; use GitHub emoji syntax (`:bug:`, `:sparkles:`, etc.) exactly as shown in the template
+
+Do **not** delete the template structure or write a freeform PR body. The comment at the top says so explicitly.
+
+The template is only in the `xnnehang.top` repo (`.github/PULL_REQUEST_TEMPLATE.md`); fetch it with `gh api` if you cannot read it locally.
+
 ## Git-Derived Metadata Needs a Full Clone in CI
 
 Post pages read "last modified" and "revision count" from `git log` at build time (`src/utils/git-utils.ts`). `actions/checkout` defaults to a shallow clone (`fetch-depth: 1`), which silently truncates history: every post then builds with revision count 1 and today's date — no error, just wrong values. Any workflow that runs `astro build` (or anything else touching git history) MUST set `fetch-depth: 0` on its checkout step. Locally the same applies to shallow clones (`git clone --depth`).
