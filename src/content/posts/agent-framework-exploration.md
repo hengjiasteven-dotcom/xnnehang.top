@@ -212,12 +212,12 @@ async for chunk in stream:
 
 所有能力扩展都通过插件实现，我们定义了四种插件类型：
 
-| 类型 | 职责 | 例子 |
-|------|------|------|
-| `tool` | 注册可调用工具 | `web_fetch`、`screen_shot`、`web_search_ddg` |
-| `hook` | 生命周期钩子 | `memory`（记忆检索+持久化）、`mood_chat`（主动对话） |
+| 类型     | 职责             | 例子                                                                          |
+| -------- | ---------------- | ----------------------------------------------------------------------------- |
+| `tool`   | 注册可调用工具   | `web_fetch`、`screen_shot`、`web_search_ddg`                                  |
+| `hook`   | 生命周期钩子     | `memory`（记忆检索+持久化）、`mood_chat`（主动对话）                          |
 | `policy` | 注入 prompt 规则 | `pre_tool_preview`（工具调用前预告）、`tool_call_integrity`（防幻觉工具调用） |
-| `skill` | 注入行为指引 | `diary`（日记读写流程） |
+| `skill`  | 注入行为指引     | `diary`（日记读写流程）                                                       |
 
 每个插件用一个 `plugin.toml` 声明身份和默认配置：
 

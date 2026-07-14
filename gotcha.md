@@ -12,11 +12,7 @@ Astro's markdown compiler does not resolve or hash relative paths of local image
 To resize or style an image (e.g., limit its width or center it), DO NOT use HTML `<img>` tags. Instead, wrap a standard Markdown image tag inside a block-level HTML element (such as `<div class="img-center" style="max-width: 24rem; margin: 0 auto;">`) and leave blank lines around the Markdown image so the parser parses it correctly:
 
 ```html
-<div class="img-center" style="max-width: 24rem; margin: 0 auto;">
-
-![alt](../../assets/img/...)
-
-</div>
+<div class="img-center" style="max-width: 24rem; margin: 0 auto;">![alt](../../assets/img/...)</div>
 ```
 
 ## Markdown Heading Depths for TOC

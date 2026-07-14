@@ -13,12 +13,12 @@ nyakku.moe/
 
 ## 源文件位置
 
-| 内容 | 路径 |
-|------|------|
+| 内容                        | 路径                                                |
+| --------------------------- | --------------------------------------------------- |
 | 博客源文件（Obsidian 写作） | `D:\lab\XnneHangBlog\obsidan\xnnehang.top.factory\` |
-| 封面图源文件 | `D:\lab\XnneHangBlog\cover\` |
-| 博客项目文章 | `nyakku.moe/src/content/posts/` |
-| 博客图片 (submodule) | `nyakku.moe/src/assets/img/covers/` |
+| 封面图源文件                | `D:\lab\XnneHangBlog\cover\`                        |
+| 博客项目文章                | `nyakku.moe/src/content/posts/`                     |
+| 博客图片 (submodule)        | `nyakku.moe/src/assets/img/covers/`                 |
 
 ## 图片处理规则
 
@@ -32,11 +32,10 @@ nyakku.moe/
 - 注意：`nyakku.moe` 和 `obsidan/xnnehang.top.factory` 挂载的是同一个 image-hosting 仓库，submodule 的改动只需在一方提交推送即可，另一方下次 `git submodule update` 后自动同步
 - **Astro 本地图片 HTML 标签限制与解决方法**：
   Astro 的 markdown 编译器无法解析 HTML `<img>` 标签中的本地相对路径。如需居中或限制图片宽度，**禁止使用 HTML `<img>` 标签**，应通过如下方式包裹标准 Markdown 图片（在前后各保留一个空行）：
+
   ```html
   <div class="img-center" style="max-width: 24rem; margin: 0 auto;">
-
-  ![alt](../../assets/img/filename.png)
-
+    ![alt](../../assets/img/filename.png)
   </div>
   ```
 
@@ -81,16 +80,16 @@ series:
 ---
 ```
 
-| 属性 | 说明 |
-|------|------|
-| `title` | 文章标题 |
-| `published` | 发布日期 |
-| `description` | 文章简介，显示在首页 |
-| `image` | 封面图。`http://` = 网络图片；`/` 开头 = `public/` 目录；其余 = 相对 markdown 路径 |
-| `tags` | 标签，数组或 `[Tag1, Tag2]` 格式 |
-| `category` | 分类 |
-| `draft` | `true` 时不会构建到正式站点 |
-| `series` | 系列，数组 |
+| 属性          | 说明                                                                               |
+| ------------- | ---------------------------------------------------------------------------------- |
+| `title`       | 文章标题                                                                           |
+| `published`   | 发布日期                                                                           |
+| `description` | 文章简介，显示在首页                                                               |
+| `image`       | 封面图。`http://` = 网络图片；`/` 开头 = `public/` 目录；其余 = 相对 markdown 路径 |
+| `tags`        | 标签，数组或 `[Tag1, Tag2]` 格式                                                   |
+| `category`    | 分类                                                                               |
+| `draft`       | `true` 时不会构建到正式站点                                                        |
+| `series`      | 系列，数组                                                                         |
 
 ## 支持的 Markdown 特性
 
@@ -164,6 +163,7 @@ series:
 ```
 
 示例：
+
 ```
 ::github{repo="MrXnneHang/xnnehang.top"}
 ```
@@ -175,13 +175,28 @@ series:
 直接粘贴 `<iframe>` 到 markdown 中：
 
 **YouTube：**
+
 ```html
-<iframe width="100%" height="468" src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+<iframe
+  width="100%"
+  height="468"
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  title="YouTube video player"
+  frameborder="0"
+  allowfullscreen
+></iframe>
 ```
 
 **Bilibili：**
+
 ```html
-<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV_VIDEO_ID&page=1" frameborder="0" allowfullscreen></iframe>
+<iframe
+  width="100%"
+  height="468"
+  src="//player.bilibili.com/player.html?bvid=BV_VIDEO_ID&page=1"
+  frameborder="0"
+  allowfullscreen
+></iframe>
 ```
 
 ### 代码高亮（Expressive Code）

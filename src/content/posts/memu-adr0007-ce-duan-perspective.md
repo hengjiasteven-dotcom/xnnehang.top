@@ -14,6 +14,7 @@ image: ../../assets/img/memu-adr0007-ce-duan-perspective/cover.png
 series:
   - Long-Term Memory
 ---
+
 ## 站在 C 端开发者的角度看 memU ADR0007
 
 事情起因是昨天我在拆解 memU 代码 [[memU 是啥？我们来拆开看看]] 的过程中，发现 memU 刚出的 ADR0007 架构设计文档几乎把我拆解和理解的内容全推翻了 =-=。
@@ -22,7 +23,7 @@ series:
 
 以及我找 mentor 唠嗑了一下:
 
->我看了 ADR 0007，检索从 RAG/LLM 双模式统一到了 hybrid search（embedding + BM25）。我理解这样做的好处是检索路径不再调 LLM，速度和成本都会好很多。<br>
+> 我看了 ADR 0007，检索从 RAG/LLM 双模式统一到了 hybrid search（embedding + BM25）。我理解这样做的好处是检索路径不再调 LLM，速度和成本都会好很多。<br>
 > 但我有个担心：原来 LLM mode 的排序是有推理能力的 — 比如能判断一条 item 虽然关键词不匹配但逻辑上和 query 相关。而且 LLM 本身在不断进化，检索能力可以跟着模型一起提升。换成 hybrid search 之后，这部分是不是就固化了？<br>
 > 另外，后续有没有计划通过其他方式（比如 reranker）把 LLM 的推理能力补回到检索路径里？
 
@@ -33,6 +34,7 @@ series:
 但我这个使用者又有点奇怪。准确来说我是 C 端开发者。是把 memU 这样的项目封装到自己项目里然后传递给没有开发背景的用户使用的。而且我自己也是自己的用户。我打 galgame 会挂着 XnneHangLab。
 
 所以视角也会有点奇怪。
+
 ### agent-loop 能代替 LLM mode 吗？
 
 前面提到把推理能力交给 agent-loop，让 agent 自己多次 query。但 agent 在长上下文下能力会衰减——我在 XnneHangLab 里做过类似的事，依靠 agent 自身能力做记忆检索和提取，长对话后 tool calling 执行率下降很多，tool 链长的 skill 触发率下降，最终不得不改成分步骤的多次 LLM call（拆分 tool call）。agent-loop 把多步骤合并为第一步的一个决策，这第一步的难度会不会太高？

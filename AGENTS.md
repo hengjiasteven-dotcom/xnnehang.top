@@ -91,4 +91,3 @@ Known pitfalls are documented in [gotcha.md](./gotcha.md). Skim this index; open
 - **PowerShell UTF-8 encoding** — `Get-Content` defaults to ANSI on Chinese Windows, garbling Chinese. Use `[System.IO.File]::ReadAllText` instead. → [details](./gotcha.md#powershell-utf-8-encoding-for-chinese-files)
 - **Only sync explicitly requested articles** — if user says "only do X and Y", don't touch anything else. → [details](./gotcha.md#only-sync-explicitly-requested-articles)
 - **Prefer `:::` directive syntax for admonitions** — use `:::note[Title]` instead of `> [!NOTE] Title`; cleaner for long blocks, native custom title support. → [details](./gotcha.md#prefer-directive-syntax-for-admonitions)
-

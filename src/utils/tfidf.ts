@@ -25,9 +25,12 @@ function tokenize(text: string): string[] {
 }
 
 export async function buildTfidfIndex(): Promise<TfidfIndex> {
-  const allPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allPosts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }: { data: { draft?: boolean } }) => {
+      return import.meta.env.PROD ? data.draft !== true : true
+    }
+  )
 
   const posts: PostForRelated[] = allPosts
     .filter((p: CollectionEntry<'posts'>) => p.body)
@@ -76,7 +79,10 @@ export async function buildTfidfIndex(): Promise<TfidfIndex> {
     const tokens = tokenizedDocs.get(p.slug) || []
     const totalTerms = tokens.length
     if (totalTerms === 0) {
-      vectors.set(p.slug, vocabulary.map(() => 0))
+      vectors.set(
+        p.slug,
+        vocabulary.map(() => 0)
+      )
       continue
     }
 
@@ -109,11 +115,7 @@ function cosineSimilarity(a: TfidfVector, b: TfidfVector): number {
   return denom === 0 ? 0 : dot / denom
 }
 
-export function getRelatedByTfidf(
-  slug: string,
-  index: TfidfIndex,
-  limit = 5,
-): PostForRelated[] {
+export function getRelatedByTfidf(slug: string, index: TfidfIndex, limit = 5): PostForRelated[] {
   const vector = index.vectors.get(slug)
   if (!vector) return []
 

@@ -7,7 +7,7 @@ import type { GraphLink, SerializedGraph } from '@/types/graph'
  */
 export function serializeWikiGraphWithTitles(
   wikiGraph: WikiGraph,
-  slugToTitle: Map<string, string>,
+  slugToTitle: Map<string, string>
 ): SerializedGraph {
   const nodes: SerializedGraph['nodes'] = []
   const links: SerializedGraph['links'] = []
@@ -30,10 +30,7 @@ export function serializeWikiGraphWithTitles(
 /**
  * Extract a 1-degree neighborhood subgraph around `currentSlug`.
  */
-export function getMiniGraph(
-  graph: SerializedGraph,
-  currentSlug: string,
-): SerializedGraph {
+export function getMiniGraph(graph: SerializedGraph, currentSlug: string): SerializedGraph {
   const connectedIds = new Set<string>([currentSlug])
   const miniLinks: GraphLink[] = []
 
@@ -46,7 +43,7 @@ export function getMiniGraph(
   }
 
   return {
-    nodes: graph.nodes.filter(n => connectedIds.has(n.id)),
+    nodes: graph.nodes.filter((n) => connectedIds.has(n.id)),
     links: miniLinks,
   }
 }

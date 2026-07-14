@@ -11,6 +11,7 @@ featured: true
 series:
   - NLP
 ---
+
 ![](../../assets/img/about-comeback-learn-tfidf/PixPin_2026-07-12_23-13-36.jpg)
 
 > [!NOTE]
@@ -162,33 +163,33 @@ https://xnnehang.top/
 and，embedding 的 tokenize 过程和 embedding 出来以前的 tokenize 的有什么不同？
 
 > [!NOTE] Korewaxnne
-> 
+>
 > 先把管线顺序理清楚：
-> 
+>
 > ```
 > 原始文本 → **tokenize（分词）** → 转 ID → embedding lookup → 向量
 > ```
-> 
+>
 > tokenize **只负责第一步**：把文本切成 tokens。从 term 到向量是后面的 embedding lookup 干的，不要混在一起。
-> 
+>
 > ---
-> 
+>
 > **① tokenize 本身是否包含分词？**
-> 
+>
 > 包含。对于中文来说，tokenize 的核心工作就是分词。
-> 
+>
 > 但你说的「从 term → embedding」那不是 tokenize，是 embedding lookup，两个不同的步骤。
-> 
+>
 > ---
-> 
+>
 > **② embedding 前后的 tokenize 有什么不同？**
-> 
-> | | TF-IDF 时代的 tokenize | embedding 时代的 tokenize |
-> |---|---|---|
-> | 粒度 | 整词（word-level） | 子词（subword），如 BPE / WordPiece |
-> | 停用词 | 需要手动去掉（`了`、`的`） | **不需要去**——模型自己学会它们的用处 |
-> | OOV（未登录词） | 遇到没见过的词直接死掉 | 切成子词也能表示，如 `Transformer`→`Trans`+`##former` |
-> | 输出 | 一个词对应一个离散 ID | 一个词可能对应多个 subword ID |
-> | 词典大小 | 几万到几十万个词 | **固定**，如 BERT 约 3 万个子词 |
-> 
+>
+> |                 | TF-IDF 时代的 tokenize     | embedding 时代的 tokenize                             |
+> | --------------- | -------------------------- | ----------------------------------------------------- |
+> | 粒度            | 整词（word-level）         | 子词（subword），如 BPE / WordPiece                   |
+> | 停用词          | 需要手动去掉（`了`、`的`） | **不需要去**——模型自己学会它们的用处                  |
+> | OOV（未登录词） | 遇到没见过的词直接死掉     | 切成子词也能表示，如 `Transformer`→`Trans`+`##former` |
+> | 输出            | 一个词对应一个离散 ID      | 一个词可能对应多个 subword ID                         |
+> | 词典大小        | 几万到几十万个词           | **固定**，如 BERT 约 3 万个子词                       |
+>
 > 最核心的区别是**粒度**。以前是整词切，现在会把词再切碎。因为「毕业」出现 1000 次，「毕业典礼」只出现 5 次。用子词切分，模型看到「毕业典礼」能复用「毕业」学到的特征。

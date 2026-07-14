@@ -6,7 +6,10 @@ export type WikiLinkInfo = {
   unresolved: string[]
 }
 
-export type WikiGraph = Map<string, { outbound: WikiLinkInfo; inbound: { slug: string; title: string }[] }>
+export type WikiGraph = Map<
+  string,
+  { outbound: WikiLinkInfo; inbound: { slug: string; title: string }[] }
+>
 
 /**
  * Build the wiki link graph from all post bodies.

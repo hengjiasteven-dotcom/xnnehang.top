@@ -5,9 +5,12 @@ import { getCategoryUrl } from '@utils/url-utils.ts'
 
 // // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
-  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }: { data: { draft?: boolean } }) => {
+      return import.meta.env.PROD ? data.draft !== true : true
+    }
+  )
 
   const sorted = allBlogPosts.sort((a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => {
     const aPin = a.data.pin ? 1 : 0
@@ -55,9 +58,12 @@ export type Tag = {
 }
 
 export async function getTagList(): Promise<Tag[]> {
-  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }: { data: { draft?: boolean } }) => {
+      return import.meta.env.PROD ? data.draft !== true : true
+    }
+  )
 
   const countMap: { [key: string]: number } = {}
   allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {
@@ -87,9 +93,12 @@ export type Series = {
 }
 
 export async function getCategoryList(): Promise<Category[]> {
-  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }: { data: { draft?: boolean } }) => {
+      return import.meta.env.PROD ? data.draft !== true : true
+    }
+  )
   const count: { [key: string]: number } = {}
   allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {
     if (!post.data.category) {
@@ -122,9 +131,12 @@ export async function getCategoryList(): Promise<Category[]> {
 }
 
 export async function getSeriesList(): Promise<Series[]> {
-  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection('posts', ({ data }: { data: { draft?: boolean } }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }: { data: { draft?: boolean } }) => {
+      return import.meta.env.PROD ? data.draft !== true : true
+    }
+  )
 
   const seriesMap: Map<string, PostForList[]> = new Map()
   allBlogPosts.forEach((post: CollectionEntry<'posts'>) => {

@@ -13,6 +13,7 @@
 maybe 有 ADHD。暂时没有机会去诊断，但我的行为表现和我一个确诊的朋友极像。
 
 :::note[我的具体表现]
+
 <details>
 <summary>点击展开 / 折叠列表</summary>
 <ul>

@@ -11,8 +11,8 @@ description: 《走走停停》观后，关于追求与自我提升
 series:
   - 观影
 ---
-![走走停停](../../assets/img/covers/zouzoutingting.jpg)
 
+![走走停停](../../assets/img/covers/zouzoutingting.jpg)
 
 ## 「看那么多电影，还不是要回来啃老。」
 

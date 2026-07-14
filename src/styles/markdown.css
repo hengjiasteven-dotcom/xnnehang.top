@@ -51,12 +51,12 @@
 
   a.wikilink::before {
     content: '[[';
-    @apply text-neutral-400 text-xs opacity-60;
+    @apply text-xs text-neutral-400 opacity-60;
   }
 
   a.wikilink::after {
     content: ']]';
-    @apply text-neutral-400 text-xs opacity-60;
+    @apply text-xs text-neutral-400 opacity-60;
   }
 
   code {

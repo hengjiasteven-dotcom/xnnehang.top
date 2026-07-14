@@ -12,8 +12,8 @@ series:
   - 阅读
   - 观影
 ---
-![春天的雪兔](../../assets/img/covers/snow-rabbit-shawshank.jpg)
 
+![春天的雪兔](../../assets/img/covers/snow-rabbit-shawshank.jpg)
 
 ## 凿洞
 

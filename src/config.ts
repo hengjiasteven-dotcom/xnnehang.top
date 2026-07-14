@@ -30,8 +30,7 @@ export const siteConfig: SiteConfig = {
     enable: true,
     depth: 3,
   },
-  favicon: [
-  ],
+  favicon: [],
 }
 
 export const navBarConfig: NavBarConfig = {

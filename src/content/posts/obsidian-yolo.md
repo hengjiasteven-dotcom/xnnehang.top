@@ -18,12 +18,12 @@ series:
 ::github{repo="Lapis0x0/obsidian-yolo"}
 
 好消息，作者是活人，维护很积极，PR 进行速度非常快。
+
 ## 如何安装
 
 插件市场里可以直接安装。
 
 ![YOLO 插件安装](<../../assets/img/obsidian-yolo/Pasted image 20260618130052.png>)
-
 
 至于为什么叫做 YOLO，这个可以看作者博客:[YOLO 开发日志（一）：为什么要开发 YOLO](https://www.lapis.cafe/posts/ai-and-deep-learning/yolo/yolo-releasenote-01/)
 
@@ -64,6 +64,7 @@ series:
 ![终端命令配置](<../../assets/img/obsidian-yolo/Pasted image 20260618161405.png>)
 
 以及更推荐给它写个关于 git 的 skill，放在 `YOLO/skills` 当中。
+
 ## 功能体验
 
 ### 对话侧边栏
@@ -74,7 +75,7 @@ series:
 
 ### 快捷呼出对话框
 
-可以用 `/` + `空格`  呼出快捷对话框讲明需求，双手可以不必离开键盘。
+可以用 `/` + `空格` 呼出快捷对话框讲明需求，双手可以不必离开键盘。
 
 ![快捷对话框](<../../assets/img/obsidian-yolo/Pasted image 20260618163233.png>)
 
@@ -82,7 +83,7 @@ series:
 
 ### Tab 补全
 
-可以通过 `，`、`。`、`\n`(换行)等符号触发自动补全，符号可自行增删，触发后等待一定时间（可自行配置）后，就可以触发大模型的补全。 
+可以通过 `，`、`。`、`\n`(换行)等符号触发自动补全，符号可自行增删，触发后等待一定时间（可自行配置）后，就可以触发大模型的补全。
 
 ![Tab 补全配置](<../../assets/img/obsidian-yolo/Pasted image 20260618163412.png>)
 

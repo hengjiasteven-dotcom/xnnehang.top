@@ -7,11 +7,9 @@ const MAX_POSTS = 3
 
 // src/assets/img/ is a git submodule pointing to MrXnneHang/image-hosting.
 // Raw content for that submodule must reference the submodule's own repo.
-const IMAGE_HOSTING_RAW_BASE =
-  'https://raw.githubusercontent.com/MrXnneHang/image-hosting/main'
+const IMAGE_HOSTING_RAW_BASE = 'https://raw.githubusercontent.com/MrXnneHang/image-hosting/main'
 // All other src/ assets (if ever needed) live in the main blog repo.
-const BLOG_RAW_BASE =
-  'https://raw.githubusercontent.com/MrXnneHang/xnnehang.top/main'
+const BLOG_RAW_BASE = 'https://raw.githubusercontent.com/MrXnneHang/xnnehang.top/main'
 
 function resolveImageUrl(image: string | undefined): string | null {
   if (!image) return null
@@ -53,13 +51,11 @@ export async function GET() {
   // Sort by published date, newest first
   allPosts.sort(
     (a: Post, b: Post) =>
-      new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
+      new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
   )
 
   const posts = allPosts.slice(0, MAX_POSTS).map((post: Post) => {
-    const coverUrl =
-      resolveImageUrl(post.data.image) ??
-      extractFirstBodyImage(post.body)
+    const coverUrl = resolveImageUrl(post.data.image) ?? extractFirstBodyImage(post.body)
 
     return {
       title: post.data.title,
@@ -78,4 +74,3 @@ export async function GET() {
     },
   })
 }
-
