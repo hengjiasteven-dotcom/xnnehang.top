@@ -30,6 +30,7 @@ yarn.lock
 .idea
 *.iml
 .obsidian
+YOLO/
 
 # macOS
 .DS_Store
