@@ -18,18 +18,16 @@ jobs:
           fetch-depth: 0
           submodules: true
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      - uses: voidzero-dev/setup-vp@v1
         with:
           node-version: '24'
-          cache: 'pnpm'
+          cache: true
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: vp install --frozen-lockfile
 
       - name: Lint, format and type check
-        run: pnpm run check
+        run: vp run check
 
       - name: Case Police Check
-        run: pnpm run case-police:check
+        run: vp run case-police:check
