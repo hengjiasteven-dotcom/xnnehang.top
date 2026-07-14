@@ -1,14 +1,13 @@
 ---
-title: "Travellin' Cats in Germany"
+title: "Travelling Cats in Germany: 赛博猫控的乐园"
 published: 2026-07-14
-description: 一个在静态图上找出一百只隐藏猫猫的游戏，猫猫可能是各种形状的，找出后会高亮
-image: ../../assets/img/covers/travellin-cats-shelf.jpg
-shelf: '游戏'
+description: 一个在静态图上找出一百只隐藏猫猫的游戏，猫猫可能是各种形状的，找出后会高亮并且喵~，音乐和喵喵叫超治愈。
+shelf: 游戏
 tags:
   - 游戏
   - 猫
 category: 游戏
-shelfCover: '../../assets/img/covers/travellin-cats-shelf.jpg'
+shelfCover: ../../assets/img/covers/travellin-cats-shelf.jpg
 ---
 
 ![Travellin' Cats in Germany](../../assets/img/travellin-cats-in-germany/PixPin_2026-07-14_20-18-58.jpg)
