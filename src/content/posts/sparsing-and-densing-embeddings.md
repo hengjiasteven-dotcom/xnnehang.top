@@ -1,5 +1,5 @@
 ---
-title: 稀疏与稠密：从零开始的一次追问
+title: Sparse vs Dense：从 BPE 到 Hybrid Search 的一次串线
 published: 2026-07-14
 featured: true
 category: 边写边学
