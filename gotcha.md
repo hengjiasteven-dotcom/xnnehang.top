@@ -79,3 +79,30 @@ Use `:::note[Title]` (directive syntax) instead of `> [!NOTE] Title` (GitHub syn
 ## Git-Derived Metadata Needs a Full Clone in CI
 
 Post pages read "last modified" and "revision count" from `git log` at build time (`src/utils/git-utils.ts`). `actions/checkout` defaults to a shallow clone (`fetch-depth: 1`), which silently truncates history: every post then builds with revision count 1 and today's date — no error, just wrong values. Any workflow that runs `astro build` (or anything else touching git history) MUST set `fetch-depth: 0` on its checkout step. Locally the same applies to shallow clones (`git clone --depth`).
+
+## Run `vp check --fix` Before Any Push
+
+Always run `npx vp check --fix` before `git commit` and `git push`. The CI rejects format violations, and a rejected push requires a rebase + re-push. Make it a habit: format → commit → push, never commit → push → fix.
+
+## Use `npx vp` Instead of Bare `vp` in PowerShell
+
+On this Windows setup, `vp` is not registered as a global cmdlet; PowerShell throws `CommandNotFoundException`. Always use `npx vp <subcommand>` (e.g., `npx vp check --fix`, `npx vp dev`) to invoke Vite+ commands.
+
+## Oxlint/Oxfmt May "Correct" Stylistic Choices in Titles
+
+`npx vp check --fix` runs oxfmt on markdown files, which:
+
+- Converts YAML double quotes (`"..."`) to single quotes (`'...'`) for strings without special characters
+- May "fix" intentional spelling (e.g., `Travellin'` → `Travelling`)
+
+After format, always **review the diff** to ensure the formatter didn't override intentional stylistic choices. If it did, restore them and re-run `npx vp check` (without `--fix`) to verify the file is acceptable as-is.
+
+## Use `Set-Location` + `;` Instead of `cd /d` in PowerShell
+
+PowerShell does not support the CMD-style `cd /d D:\path`. To change drives and run multiple commands, use:
+
+```powershell
+Set-Location -Path "D:\lab\XnneHangBlog\nyakku.moe" ; git status
+```
+
+Or the shorthand `cd "D:\path"` (PowerShell handles drive switching automatically).
