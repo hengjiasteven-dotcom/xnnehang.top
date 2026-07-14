@@ -29,6 +29,7 @@ yarn.lock
 # ide
 .idea
 *.iml
+.obsidian
 
 # macOS
 .DS_Store
