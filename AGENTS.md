@@ -86,3 +86,8 @@ Known pitfalls are documented in [gotcha.md](./gotcha.md). Skim this index; open
 - **Sätteri plugin AST mutation** — JS nodes are read-only proxies; `parent.children.splice()` silently does nothing. Use `{ raw: "..." }` returns or `ctx.replaceNode()`/`ctx.setProperty()`. → [details](./gotcha.md#sätteri-plugins-cannot-mutate-the-ast-via-js-splice)
 - **Git-derived post metadata in CI** — builds read `git log`; workflows running `astro build` need `fetch-depth: 0` or values are silently wrong. → [details](./gotcha.md#git-derived-metadata-needs-a-full-clone-in-ci)
 - **PR body must follow the template** — read `.github/PULL_REQUEST_TEMPLATE.md` before `gh pr create`; fill 动机/解决方案/类型 and check at least one type box. → [details](./gotcha.md#pr-body-must-follow-the-pull-request-template)
+- **Submodule: pull don't copy+push** — don't manually commit into the image submodule; the user handles that from Obsidian side. Just `git submodule update`. → [details](./gotcha.md#submodule-pull-instead-of-copy--push)
+- **Proxy not inherited by CLI** — system proxy doesn't auto-flow to terminal; explicitly set `$env:HTTP_PROXY` before remote ops. → [details](./gotcha.md#proxy-not-inherited-from-system-settings)
+- **PowerShell UTF-8 encoding** — `Get-Content` defaults to ANSI on Chinese Windows, garbling Chinese. Use `[System.IO.File]::ReadAllText` instead. → [details](./gotcha.md#powershell-utf-8-encoding-for-chinese-files)
+- **Only sync explicitly requested articles** — if user says "only do X and Y", don't touch anything else. → [details](./gotcha.md#only-sync-explicitly-requested-articles)
+

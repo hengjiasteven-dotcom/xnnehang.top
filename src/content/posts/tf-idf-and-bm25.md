@@ -8,6 +8,8 @@ tags:
   - 信息检索
 description: 用我自己的白话来讲一遍 TF-IDF。从 term 与分词开始，到 TF、IDF、查询打分、BM25，再到博客里推荐相关文章的实践。也算是还了一下没听 NLP 老师课的债，有需要再学果然更容易看进去。
 featured: true
+series:
+  - NLP
 ---
 ![](../../assets/img/about-comeback-learn-tfidf/PixPin_2026-07-12_23-13-36.jpg)
 
