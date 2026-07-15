@@ -167,7 +167,9 @@ xK9sG3bPmW:
 以下是从"你发送消息"到"记忆被存储"的完整管线。这才是核心。
 
 <div class="img-center" style="max-width: 32rem; margin: 0 auto;">
+
 ![MoeChat 时间线图](../../assets/img/moechat-beginner-guide/moechat-pipeline.png)
+
 </div>
 关键设计：**检索是同步的**（生成回复前需要记忆），**存储是异步的**（回复已经在流式输出后，在后台提取和保存）。
 
@@ -262,7 +264,9 @@ memory/
 MoeChat 使用**二维情感模型**，外加一个隐藏的挫败感累加器：
 
 <div class="img-center" style="max-width: 32rem; margin: 0 auto;">
+
 ![MoeChat 二维情感模型](../../assets/img/moechat-beginner-guide/moechat-emotion-model.png)
+
 </div>
 
 \+ 隐藏维度：**挫败感**（累积，达到阈值时触发崩溃）
@@ -332,7 +336,9 @@ frustration += impact * mood_bonus     # 负面消息增加挫败感
 ### 三种状态
 
 <div class="img-center" style="max-width: 24rem; margin: 0 auto;">
+
 ![MoeChat 三种状态转换](../../assets/img/moechat-beginner-guide/moechat-state-diagram.png)
+
 </div>
 
 - **正常**：标准的情感处理，使用上述所有数学计算
