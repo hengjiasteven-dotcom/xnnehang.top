@@ -171,6 +171,7 @@ xK9sG3bPmW:
 ![MoeChat 时间线图](../../assets/img/moechat-beginner-guide/moechat-pipeline.png)
 
 </div>
+
 关键设计：**检索是同步的**（生成回复前需要记忆），**存储是异步的**（回复已经在流式输出后，在后台提取和保存）。
 
 ---
