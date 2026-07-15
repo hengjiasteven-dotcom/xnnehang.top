@@ -7,7 +7,7 @@ category: 边写边学
 draft: false
 featured: true
 series:
-  - Long Term Memory
+  - Long-Term Memory
 ---
 
 ![MoeChat 封面图](../../assets/img/moechat-beginner-guide/moechat-cover-poster.jpg)
