@@ -166,7 +166,7 @@ xK9sG3bPmW:
 
 以下是从"你发送消息"到"记忆被存储"的完整管线。这才是核心。
 
-<div class="img-center" style="max-width: 32rem; margin: 0 auto;">
+<div class="img-center" style="max-width: 20rem; margin: 0 auto;">
 
 ![MoeChat 时间线图](../../assets/img/moechat-beginner-guide/moechat-pipeline.png)
 
