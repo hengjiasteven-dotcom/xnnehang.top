@@ -322,3 +322,72 @@ claude say yes. 确实也不轻了。而且根据 claude 的分析，老的 memo
 刚刚突然想到，应该是可以来一个比较轻量的 LLM call 判断当前到上次 memorize 之间是否积攒了足够的消息，这样既可以不用固定死轮数，也可以自动触发。
 
 claude 补充说可以用 count token 的方式来决定是否要 memorize。
+
+## What's new in ADR 0009 00010?
+
+最近虽然还没跟进 ADR，但是实际上已经做上了。
+
+主要都是关于 `memu-cli` 的。
+
+我最近几天主要做了这些：
+
+- memu commit 的 embedding 返回契约对齐。[#504](https://github.com/NevaMind-AI/memU/pull/504)
+- codex 的 classify 去掉环境、turn 以及重复注入的 AGENTS.md 等信息，避免 token 浪费而后给无关的内容做记忆提取 [#511](https://github.com/NevaMind-AI/memU/pull/511)
+- 加了一个快速安装 Latest HEAD 的 agentic install workflow，继承旧的配置，检查是否引入新配置，继承记忆数据库。非常便利，特别在 openclaw 里用。[#527](https://github.com/NevaMind-AI/memU/pull/527)
+- 修复 openclaw 的 memorize 的输入重复和空值问题。 [#533](https://github.com/NevaMind-AI/memU/pull/533)
+
+这几个都比较有意思，特别是最后一个让我决定去检查一下每个 adpater 的输入 classify 的内容以及最后的输出，各自都有什么冗余。
+
+然后今天就在这里写了这篇 [[了解 RRF 和 Hybrid Search：基于时间的检索应该以什么形态混合，以及它在项目场景和陪伴场景的适配性]]，因为如果只是一味 debug 会迷失自我。需要沉淀一下。
+
+还有一篇正在进行中。
+
+不过我好奇的是，源码的进度很奇怪。 0009 00010 00011 的内容几乎都实现了，就是实现的很草率， all vibe 最近在疯狂 QA。
+
+但是 0007 承诺的 Hybrid Search 和 BM25 到现在还没有落地，但这个提升应该不小呀。
+
+我目前也对齐一下源码和 ADR 文档，看看 0009 和 00010 在是实现上，有哪些缺口，有哪些不对齐？
+
+比如源码那边加了一个 WorkBuddy 的 Adapter，这个是意料之外的。
+
+:::[claude]
+
+### 对齐的部分
+
+ADR 0010 五个 host 的行为声明和源码逐行对齐，没有偏差：
+
+- 每个 host 的 session 路径、instruction 文件路径、`classify()` 语义、timestamp 处理方式，全部和 ADR 表格一致。
+- Hermes 确实以 `?mode=ro` 只读打开 SQLite（`hermes/sessions.py:72`），且有测试验证写入会抛 `OperationalError`。
+- Cursor 确实没有 timestamp，继承 base 的 `timestamp()` 返回 `None`，manifest 记录 null。
+- OpenClaw 的 timestamp 确实同时处理了 ISO 字符串和 epoch 毫秒（`openclaw/sessions.py:82-93`），用 `> 1e11` 阈值区分。
+- `TranscriptSource.exists()` 默认 `root().is_dir()`，Hermes 覆盖为 `self._db.is_file()`——都如 ADR 所述。
+- 配置层面：`build_service_from_env()` 确实在缺少 `MEMU_DB` 时抛 `ConfigError`（通过 `require()` 调用，`env.py:94-99`），不会静默回退。
+
+### 分叉的部分
+
+**1. `memu retrieve` 根本不是 ADR 0009 说的"重型 LLM 路由路径"**
+
+ADR 0009 第 89-92 行花了很大篇幅强调：inject hook **绝对不能**调用 `memu retrieve`——因为那是 "LLM-routed path（intention routing, sufficiency checks, summarization），far too heavy to run on every turn"。所以它需要专门走 `progressive_retrieve`。
+
+但实际上打开 `src/memu/cli.py:92`，`memu retrieve` 调用的就是 `service.progressive_retrieve()`——和 host adapter 的 `memu-codex retrieve` 调用的是**同一个函数**。`cli.py` 第 145 行的描述甚至直接写着 `"Single-shot embedding retrieval ... (LLM-free, fast)"`。
+
+也就是说，ADR 0009 用来论证"为什么 host adapter 需要自己的 retrieve 子命令"的那个前提——`memu retrieve` 太重——**在代码里不成立**。重型 LLM 路由检索在整个代码库里不存在。ADR 的架构叙事和实现之间有一个空洞的论证层。
+
+**2. "每个入口都调用 `build_service_from_env()`"——`memu` CLI 自己没有**
+
+ADR 0009 第 121-125 行声称 "every entrypoint calls it: the `memu` CLI, `memu-codex retrieve`, and the bridging pipeline's prepare and commit"。bridging pipeline 确实调用了（`pipeline.py:55` 和 `pipeline.py:103`），host adapter 的 retrieve 也调用了（`retrieval.py:31`）。
+
+但 `memu` CLI 本身用的是自己的 `_build_service()`（`cli.py:68-83`），走 argv 参数解析构建 service，不经过 `build_service_from_env()`。虽然它也会读 `config.env` 作为 fallback，正常情况下结果一致——但这和 ADR 说的 "single source of truth，一个函数统一所有入口" 是不一样的。存在两条构建路径。
+
+**3. `install-instruction` 和 `remove-instruction` 是公开 CLI 命令，ADR 0009 没提**
+
+ADR 0009 列举了 host CLI 的全部 verb：`retrieve`、`prepare`、`commit`、`verify-resources`、`doctor`、`docs`。但实际的共享 CLI（`host_cli.py:3-5`）还有 `install-instruction` 和 `remove-instruction`。这两个在 `instruction.py:294` 和 `instruction.py:314` 注册，是用户安装/卸载指令的入口，不是内部实现细节。ADR 的 scope 描述里漏了它们。
+
+**4. WorkBuddy 是第六个 host adapter，没有任何 ADR 覆盖**
+
+`pyproject.toml:69` 注册了 `memu-workbuddy`，完整实现在 `src/memu/hosts/workbuddy/`。session 格式类 Codex 但 record type 不同（`input_text`/`output_text`，`function_call`/`function_call_result` 作为独立 type）。完全遵循 0010 的 `HostSpec` 模式，但 ADR 0010 的表格和正文都只写了五个 host。
+::::
+
+ADR 0009 说不应该有任何重型 LLM retrieve，于是乎所有的 LLM Retrieve 一夜消失 =-=。
+
+不过 ADR 0007 里承诺的 Hybrid Search 差不多是时候落地了。我们那边也可以最近把 wikimem 的 ADR 落实，然后就可以开测了。
