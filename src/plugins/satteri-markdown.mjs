@@ -176,8 +176,16 @@ function buildTitleMap() {
     const content = readFileSync(path.join(postsDir, file), 'utf-8')
     const match = content.match(/^title:\s*(.+)$/m)
     if (match) {
+      let rawTitle = match[1].trim()
+      // Strip surrounding single or double quotes (YAML quoting syntax)
+      if (
+        (rawTitle.startsWith("'") && rawTitle.endsWith("'")) ||
+        (rawTitle.startsWith('"') && rawTitle.endsWith('"'))
+      ) {
+        rawTitle = rawTitle.slice(1, -1)
+      }
       const slug = file.replace(/\.md$/, '')
-      titleToSlug.set(normalizeQuotes(match[1].trim().toLowerCase()), slug)
+      titleToSlug.set(normalizeQuotes(rawTitle.toLowerCase()), slug)
     }
   }
   return titleToSlug
