@@ -9,6 +9,8 @@ series:
   - Long-Term Memory
 ---
 
+![](../../assets/img/covers/PixPin_2026-07-21_12-26-10.jpg)
+
 ## 了解不多，问题很多
 
 在 [[MoeChat：AI 角色如何记住你、感受情绪]] 中，我们曾预告会简单了解一下多路混合检索的具体设计方案。
@@ -33,7 +35,7 @@ series:
 
 如果是我的桌宠应用场景，我会直接应用三路混合检索，融合简单用 RRF，不为什么，就为了时间检索能够像 MoeChat 那样单独工作。而且我头脑简单，RRF 很对我胃口。
 
-## 开始
+## Hybrid Search 与 RRF：两路融合方法的选择
 
 ### Hybrid Search 和 RRF 的关系
 
@@ -84,7 +86,7 @@ RRF 是**融合方法之一**——"怎么把两路结果合在一起"。
 
 确实 RRF 会有个问题就是忽略分数和间距问题。但它很干净，对于那种本身就没有分数的来说。
 
-你可以读一下：https://github.com/NevaMind-AI/memU/tree/main/docs/adr
+你可以读一下：[memU ADR](https://github.com/NevaMind-AI/memU/tree/main/docs/adr)
 
 里的 ADR 0006，0007，0008，不过我们的 retrieve 已经实现了，你读源码也是一样的。
 
@@ -97,6 +99,8 @@ RRF 是**融合方法之一**——"怎么把两路结果合在一起"。
 
 不过目前源码里 retrieve 只走了 vector-only（cosine similarity），BM25 那路还没实现——hybrid search 还停留在设计阶段。
 :::
+
+## 加入时间维度：三路检索的挑战与取舍
 
 那么我们现在来考虑一个比较困难的问题。
 
@@ -175,11 +179,15 @@ c 在工程上就是向量库里标准的 **metadata pre-filter**（`WHERE ts BE
 一句话版本：**显式时间做过滤，隐式时间做衰减，永远不做第三路。**
 :::
 
+## 设计落地：时间快通道与记忆结构
+
 但我依然希望时间检索的快通道能够始终激活且能独立工作，而意图识别作为一个 tool call。
 
-这个牵扯比较多，你可以看：https://github.com/XnneHangLab/wikimem
+这个牵扯比较多，你可以看：::github{repo="XnneHangLab/wikimem"}
 
-以及 https://github.com/XnneHangLab/XnneHangLab。
+::github{repo="XnneHangLab/XnneHangLab"}
+
+### 时间快通道：正则与意图识别双轨
 
 我觉得时间的快检索通道应该由 wikimem 持有：
 
@@ -198,6 +206,8 @@ c 在工程上就是向量库里标准的 **metadata pre-filter**（`WHERE ts BE
 我觉得 wikimem 应该具有类似 MoeChat 那样的快通道。而意图识别，关于时间的分析，比如说 LLM call 做成一个 Tool Calling，我觉得可以集成到 XnneHangLab。
 
 意图识别具体会带来什么？意图识别是对模糊时间，无法被我们简单正则命中方案的补充。我希望不要混淆职责。它可以让我们 focus on 正则实现简单方案，然后把复杂的事情交给意图识别的 tool call。
+
+### 记忆结构：日记与 Wiki 的边界
 
 另外就是关于记忆结构了。在 TimeLine 上， MoeChat 只记忆事实情景记忆，对于偏好、人设等等都是独立结构的。
 
@@ -220,6 +230,8 @@ c 在工程上就是向量库里标准的 **metadata pre-filter**（`WHERE ts BE
 但或许这个该由 wikimem 自己提供，因为 wikimem 是一个框架，至少 wikimem 要像 yutto serve rpc 改造那样，不执著于 cli，在数据接口上实现，这样别的应用层才好套自己的壳。传输协议也得规划。
 
 同时 markdown 的日记系统最好也能被管理。
+
+## 框架与应用的职责划分
 
 Fable 老师救一下。我们可能需要更新一下 wikimem 和 XnneHangLab 的 ADR 了。明确一下，什么是作为框架该做的，什么是作为应用该做的。
 
@@ -300,8 +312,9 @@ wikimem 仓库现在没有 ADR 目录，框架的决策全记在 XnneHangLab 的
 一句话版本：**框架管"确定性的机制"，应用管"要花钱的判断"；发生过的事进日记，现在为真的事进 wiki；真相永远是 markdown，其他一切都是可删的缓存、或可换的壳。**
 :::
 
-感谢 Fable 老师，让我看清 wikimem 该怎么走。提了两个 PR：
+## 后记
 
-https://github.com/XnneHangLab/XnneHangLab/pull/498
+感谢 Fable 老师，搞清 RRF 和 Hybrid Search 关系的同时让我看清 wikimem 该怎么走，XnneHangLab 应该自己负责什么。提了两个 PR：
 
-https://github.com/XnneHangLab/wikimem/pull/13
+- [XnneHangLab#498](https://github.com/XnneHangLab/XnneHangLab/pull/498)
+- [wikimem#13](https://github.com/XnneHangLab/wikimem/pull/13)
