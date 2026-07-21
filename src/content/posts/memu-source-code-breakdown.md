@@ -393,3 +393,9 @@ ADR 0009 说不应该有任何重型 LLM retrieve，于是乎所有的 LLM Retri
 不过 ADR 0007 里承诺的 Hybrid Search 差不多是时候落地了。我们那边也可以最近把 wikimem 的 ADR 落实，然后就可以开测了。
 
 ADR 00011 似乎涉及一些范式的设计，我们后续独立拆解，它似乎要应对一个通用的场景，我们也可以看一下，我们的 XnneHangLab，要如何接入这个通用范式？
+
+值得注意的是，我们所有 adapter 的 retrieve 都是用 Skill 触发的而不是 on_prompt 的。
+
+不管是 CLAUDE.md 还是 AGENTS.md，它们都不是“绝对安全”的，遗忘、惰性、幻觉也都会在长文里照常发生。
+
+我们当时补了 [简易的 A/B test](https://github.com/NevaMind-AI/memU/issues/507)。
