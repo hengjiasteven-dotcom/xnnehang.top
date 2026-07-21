@@ -1,8 +1,13 @@
 ---
-title: 'RRF vs Hybrid Search：从了解到实践'
+title: 了解 RRF 和 Hybrid Search：基于时间的检索应该以什么形态混合，以及它在代码场景和陪伴场景的适配性
 published: 2026-07-21
-description: '深入探讨 Hybrid Search 与 RRF 的关系、三路混合检索的设计取舍，以及时间在记忆检索中应该扮演什么角色——门控还是第三路？'
-tags: [RAG, Hybrid Search, RRF, 记忆系统, 检索]
+description: MoeChat 衍生讨论 RRF 和 Hybrid Search：时间检索应该以什么姿态参与混合检索？在不同场景里是否以及 wikimem 和 XnneHangLab 边界划分。
+tags:
+  - RAG
+  - Hybrid Search
+  - RRF
+  - 记忆系统
+  - 检索
 category: 边写边学
 featured: true
 series:
