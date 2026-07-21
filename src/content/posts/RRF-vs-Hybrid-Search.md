@@ -321,5 +321,5 @@ wikimem 仓库现在没有 ADR 目录，框架的决策全记在 XnneHangLab 的
 
 感谢 Fable 老师，搞清 RRF 和 Hybrid Search 关系的同时让我看清 wikimem 该怎么走，XnneHangLab 应该自己负责什么。提了两个 PR：
 
-- [XnneHangLab#498](https://github.com/XnneHangLab/XnneHangLab/pull/498)
-- [wikimem#13](https://github.com/XnneHangLab/wikimem/pull/13)
+- [XnneHangLab#499](https://github.com/XnneHangLab/XnneHangLab/pull/499)
+- [wikimem#14](https://github.com/XnneHangLab/wikimem/pull/14)
