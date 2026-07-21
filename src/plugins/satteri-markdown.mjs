@@ -159,7 +159,9 @@ export function satteriDirectiveToHast() {
 let titleToSlug = null
 
 function normalizeQuotes(s) {
-  return s.replace(/[""„‟]/g, '"').replace(/[''‚‛]/g, "'")
+  // 弯引号统一为直引号，双引号 “ ” „ ‟ → "，单引号 ‘ ’ ‚ ‛ → '
+  // 必须用 \u 转义而非字面量弯引号：字面量会被格式化工具/AI 悄悄改写成直引号，让本函数静默失效（已发生过一次）
+  return s.replace(/[\u201C\u201D\u201E\u201F]/g, '"').replace(/[\u2018\u2019\u201A\u201B]/g, "'")
 }
 
 function buildTitleMap() {

@@ -1,3 +1,9 @@
+---
+title: chat_completion、responses 与 Anthropic Messages（草稿）
+published: 2026-07-21
+draft: true
+---
+
 ## 一些废话
 
 今天要探讨的是几个协议之间的细微区别。但感觉又是大部分 AI 撰写的一天。最近都在恶补各种东西，很少自己一个人沉浸式地脱离 AI 去思考一件事情，上一次还是 [[事如春夢了無痕，当时却只觉欢喜。]]
