@@ -199,7 +199,9 @@ c 在工程上就是向量库里标准的 **metadata pre-filter**（`WHERE ts BE
 
 但我依然希望时间检索的快通道能够始终激活且能独立工作，而意图识别作为一个 tool call。
 
-这个牵扯比较多，你可以看：::github{repo="XnneHangLab/wikimem"}
+这个牵扯比较多，你可以看：
+
+::github{repo="XnneHangLab/wikimem"}
 
 ::github{repo="XnneHangLab/XnneHangLab"}
 
