@@ -1,7 +1,7 @@
 ---
 title: 了解 RRF 和 Hybrid Search：基于时间的检索应该以什么形态混合，以及它在代码场景和陪伴场景的适配性
 published: 2026-07-21
-description: MoeChat 衍生讨论 RRF 和 Hybrid Search：时间检索应该以什么姿态参与混合检索？在不同场景里的是陪读讨论，以及 wikimem 和 XnneHangLab 边界划分。
+description: MoeChat 衍生讨论 RRF 和 Hybrid Search：时间检索应该以什么姿态参与混合检索？在不同场景里如何适配？以及 wikimem 和 XnneHangLab 的边界划分。
 tags:
   - RAG
   - Hybrid Search
@@ -315,6 +315,8 @@ sqlite 的问题不是性能，是它违反你们自己的 ADR-0001："磁盘上
 ### 落到 ADR
 
 wikimem 仓库现在没有 ADR 目录，框架的决策全记在 XnneHangLab 的 ADR 里——既然它已经独立成仓库，框架自己的决策应该跟着框架走。另外确认一下 `packages/wikimem` 和独立仓库是不是同一份代码：我看到 workspace 里有 `cli.py` 而独立仓库还没有，如果是两份拷贝，已经开始漂移了。
+
+（发布前按语：查了，不是漂移——独立仓库只是本地 checkout 落后了 4 个 commit，上游早已合并零依赖 CLI（[wikimem#12](https://github.com/XnneHangLab/wikimem/pull/12)），两边是同一份代码。）
 
 | 归属        | 该写的 ADR                                                                                                                                                                                        |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
