@@ -1,7 +1,7 @@
 ---
 title: 了解 RRF 和 Hybrid Search：基于时间的检索应该以什么形态混合，以及它在代码场景和陪伴场景的适配性
 published: 2026-07-21
-description: MoeChat 衍生讨论 RRF 和 Hybrid Search：时间检索应该以什么姿态参与混合检索？在不同场景里是否以及 wikimem 和 XnneHangLab 边界划分。
+description: MoeChat 衍生讨论 RRF 和 Hybrid Search：时间检索应该以什么姿态参与混合检索？在不同场景里的是陪读讨论，以及 wikimem 和 XnneHangLab 边界划分。
 tags:
   - RAG
   - Hybrid Search
