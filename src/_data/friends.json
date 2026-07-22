@@ -41,4 +41,11 @@
     "siteUrl": "https://nkblog.top",
     "siteIcon": "https://api.nkblog.top/annex/resource/dd571679e2d5bcaea258f9fbf0d10949"
   }
+  {
+  "name": "小呆呆的博客",
+  "url": "https://xiaodaidai.site/",
+  "avatar": "https://xiaodaidai.site/img/avatar.png",
+  "description": "星凝眉上字，潮敛贝中音。",
+  "backlink": "https://xiaodaidai.site/links"
+}
 ]
